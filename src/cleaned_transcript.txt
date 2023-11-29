@@ -1,0 +1,601 @@
+
+A transformer is a network consisting of 2 sub-networks.
+an encoder
+and a decoder
+the 2 networks are connected somehow.
+and the main usage is as follows.
+there is a text in input to the encoder. The text is
+like the
+cat
+is
+on.
+This text gets split into individual words
+which are more commonly called and more properly called tokens.
+This action, or splitting the original text into tokens, is called tokenization
+and follows a specific algorithm specific for the model or specific for the language, and both
+the tokenization of a sentence like this intuitively could be. The
+cat is on. so each token will become an input
+to the encoder of the transformer.
+At the moment the text is still made of strings, the cat is on.
+If the transformer is used for a task, for instance, like machine translation, and we are translating from English to French.
+Then we expect that the decoder will output something like le chat
+est sur
+Now.
+more
+details about the encoding process. So we said that we start with this sentence that gets tokenized, split into tokens.
+And then what happens to the tokens? The tokens are part of a vocabulary.
+The vocabulary is an intrinsic feature of the chosen transformer. and it's also goes hand in hand with a tokenizer that is also an accompanying feature of the transformer.
+So the tokenization splits the sentence according to a vocabulary of tokens.
+That is just a long list of correspondences between indices. positions in the vocabulary.
+just like integers.
+and words that are stored in a
+at
+sorry
+somewhere, maybe
+is and so forth. So the vocabulary that typically that real implementation is something ranging between 30,000 and perhaps
+200,000 250,000 distinct tokens
+ creates a correspondence between integer indexes and strings. Matter of fact, after the strings are, and vice versa.
+Once the strings are converted into integers. the nature of the token is a string disappears. The encoder doesn't care if the string is short or long, is cat, or or else what are the characters?
+Once this action of converting token
+in the vocabulary to the corresponding integer.
+Only the integer plays a part in the processing of the. Input
+so what happens at this point is that attached to the vocabulary, that is.
+number of embeddings
+in exactly the same amount, and corresponding one to one to the tokens.
+These embeddings are typically pre-computed externally, to the transformer that can be updated.
+They can be randomly initialized. So there's various strategies to create this table of embeddings. But the size of the table is exactly the same size as the vocabulary.
+So when word cat appears in the input is converted to the corresponding integer. and the integer is used to index the corresponding embedding in the table of the embeddings or matrix of the embeddings.
+How big
+is each embedding, and what is it made of?
+An embedding is just a large vector of numbers.
+The numbers are typically rather small in absolute value, not exactly between minus one and plus one. But somewhere in that range they tend to be normalized to values which are reasonably small.
+and the numbers of elements in each of these vectors can vary from typically a minimum of 256 to
+what I've seen, a maximum of 1,024
+in typical ranges like 768, 512, 384. So let's make an assumption that these embeddings have a size of 768 dimensions each.
+So to repeat, whenever we encounter word cat in the text. This is extracted as a token token.
+the index and the index extracts
+from a table of embeddings and embedding of size 768.
+In this exam.
+Let's delete what's on the screen?
+Okay, so this conversion is the first step of the processing of the part of the encode
+ The embeddings that we have described are called token embeddings.
+and that the most important information in to the
+so somehow here.
+That will be them bedding for the somehow
+ at
+son embedding is when it's on embedding on its son embedding
+these token. Embeddings are the main.
+Input
+so matter of fact, they are
+to
+and quota
+the There is a possibility to add some values to them
+which go under the names of
+position and ready
+and segment embeddings.
+the first tab. much more important keeping. And
+so the position embeddings play this role.
+The token embeddings that we have seen don't depend on the position in the sentence.
+So the embedding of what cat is the same, no matter where cat, as a word appears in the input sentence.
+Now
+the
+that but given that, the processing we will see in a minute. Inside the encoder is completely symmetric, which means every token.
+attends
+all the other tokens, and vice versa.
+The processing inside code is enabled to distinguish the position of the
+in that sense. It is very much like having a set
+of tokens in input rather than a sequence from the point of view of the internal process.
+So how can the the
+data reflect the position so that somehow this information is not lost
+for the purpose of know of the processing? Obviously, if you swap the words in order, you would expect the output in the translation also to change.
+So the key information is conveyed by these position embeddings, position, embeddings are simply number
+that gets added
+to all the 768 elements of the token and addicts
+like an offset.
+If the number is positive, we'll shift all the values of the token embedding up.
+if the number is negative, will shift all the token embeddings down.
+Typically, if you read a bit of details. The most common is to use a sinusoid just to extract the values so index 0, the first index main
+extracting, adding this value index one by add this value index 2 meters. So it matched to get distinct values for each of the positions, instead of just adding 0 1, 2, and 3, which would sort of bring the values out of scale.
+The standard or default implementation of the position embedding is to take the values of a sinusoid that will still be distinct, and they will be unique enough to represent the different positions of the words in the
+the thing that is amazing.
+in my opinion. is that this value is just added
+to the token embeddings. So the token embedding 768 numbers. Ed.
+The value for position, 2. Shift them all up, or shift them all down according to where you are in the psiloso.
+Just this action of offsetting slightly
+all the values of the token embeddings is sufficient
+for the encoder to be able to tell apart their position in the sentence. So we don't encode the index of the position in any kind of explicit.
+The position is encoded implicitly by this action of shifting the values or down in such a small shift.
+It's sufficient for them that for the encoder to make sense of the positions of the values. Talking.
+Less important is the segment embedding, or at least less important in practice. It seems to have been used far less for what I can say. The default value of the segment embeddings is 0
+in the mind of the
+designer of the transformer.
+They're all played by the segment embeddings is similar to that of position embedding, but is useful when your input contains not one sentence, but maybe 2,
+potentially 3, 4.
+When is this common? When is common for the input to contain 2 sentences, for instance, for all the Lp tasks, like, for instance, a comparison of sentences. You want to assess the similarity.
+2 sentences you want to assess. If one sentence is implied by the other sentence. or one sentence contradicts the other sentence.
+or if 2 entities and in a relation. So there are many cases in which the input an energy task
+his 2 sentences, or
+and these sentences in a way should be told apart to some degree.
+So one way to do that is, to use this extant embeddings, the sentence embeddings to again shift.
+or down
+all the embeddings of the first sentence, compared to the embeddings of the second sentence, like adding one, for instance, as a number.
+all the elements, 768 d.
+Of all the tokens of the second sentence, and instead, leaving the other embeddings, the embeddings of the first sentence in the initial range.
+So this action of shifting up or down again all the token embeddings of one sentence with respect to the other helps the model to tell apart the tokens of one sentence
+versus the token of the other sentences, and to increase the accuracy in typical penalty tasks that have 2 sentences in each. Having said that.
+as I said, segment, embeddings don't seem to have had much popular use, because there is another way to separate 2 sentences, as in which is to interpret between them a special token
+that is called the separator, though.
+So another way to obtain that kind of separation from input one or sentence input sentence, one input sentence 2 is to add one or potentially more
+separating special separating tokens.
+So add an extra token which is not a big burden, instead of adding these shifts or offsets, called the sentence sorry the segment dynamics.
+It seems to be much more practice
+in the usage, common usage of transports, but just to know about them, because
+like libraries like, but
+refer to these token embeddings that we mentioned before position embeddings that we mention here, and sentence embeddings
+that by default are 0 for all the tokens in the sentence. So
+they don't exist unless you explicitly.
+Okay.
+So we have formed these embeddings in input to the
+encoder.
+as we said, repeated briefly, token plus position and potentially segment.
+But in the end they become just long vectors of 768 d. That go into input in each token slot of the end code.
+What does the encoder do with them? So, in the first place, an encoder is not
+single layer
+of network is a network organized over multiple layers. So in reality there is an encoding layer at the
+input the one that we just mentioned. There's another second encoding there. Above that there's a third encoding there. There's a fourth encoding there typically stand at the small
+transformer has 6, including theirs. A larger one has 12,
+but the number is completely arbitrary. You can add and remove as well as many as you like.
+so
+think they are completely identical.
+So the only difference is that
+the first one takes an input, the embeddings and outputs something that is called hidden states
+that have exactly the same size. 768 d.
+Hidden states of the first layer become the input to the second layer.
+which outputs hidden states of the second layer
+that become the input to the next, until eventually you have final hidden states. Let's call them x one prime XN. Prime. If we have N tokens.
+which are the hidden states of the final layer in input, let's call x, one XN.
+The embeddings that we have explained before.
+So the embeddings we have explained before go in input
+we had 4 tokens. We would have x one x 2 x 3 and x 4, where x one is the embedding
+upward x. 2 is the embedding award.
+and so
+so the
+embeddings become hidden states of exactly the same size which makes it possible for another identical layer to process those and over and over and over, until finally we get the final outcome.
+hidden states of the very final layer of the income.
+How each layer works
+delete these.
+Each layer is composed of a few sub-networks.
+The most important of all is called the self-attention.
+Self-attention is really important is often cited is often used in papers, so it's very important to understand how it works.
+The other networks are, I think, because of
+very fresh. We checking this, I think there's a so-called normalization layer followed by a feed-forward during that.
+This architecture
+potentially could change. There's been so many variants. But in the standard transformer, the one that is also very well explained and beautifully explained, that transform the block of J. Alab.
+which contains virtually every comment I'm making today.
+But this helps as a way to understand the block more easily and more gradually
+with the narrator's voice over it.
+So self-attention, normalization and fit forward, final, feed-forward.
+These are not so important. The self-attention is that important is perhaps the most. the characteristic network of the transform.
+The other networks have been used in many other euro models, deep models. But the self attention, in a way, is what people tend to associate with the transformer. As it's main, it
+should.
+So, to understand the self-attention, it will become very clear. There's a beautiful analogy, I believe, that
+is, with associative memories. Our associative memories work.
+So we have our 4 tokens, we said, x. One x, 2
+x. 3 x. 4.
+Tokens from strain to indexes, indexes, token, embeddings, position, embeddings x. One. Is the embedding of the first toe.
+And so
+so the let's look at any of them, because the beautiful thing is that the processing is identical for any of them.
+Let's look, for instance, edx. 2. The second.
+what we want to is to process this x, 2, such that at the end, from the network we will have another set. Call it simply x, 2. Prime, an output
+in the slot that corresponds to the second token. So from the second token out.
+we want something different, obviously, from x. 2. That takes into account the contribution of all the tokens in
+X to itself, but also x, one x. To the energy.
+and is the same size of x 2, so that we can attach an identical layer on top
+that will repeat the same processing, and perhaps over and over. So our goal is to obtain something of exactly the same size of x 2. But that has been co-encoded or coembedded or influenced.
+stop by the other tokens index excel.
+So how does this self-attention work?
+ The self-attention requires each self attention. There requires
+building, or having 3 mattresses that go under the name of the query matrix. the
+the key matrix. and the value
+metrics.
+In the example that we have chosen of 768.
+Each of these matrices may be
+the
+in width, and 7, 68 in height.
+or vice versa, because we can always transpose them, flip them
+same for a and same for B.
+So our token x. 2
+gets multiplied by matrix. Q.
+How do we organize that? We could take a queue transposed.
+for instance, which is 64 by 7, 6, 8,
+it's
+Peace
+x, 2 is said many times 7, 68
+times one. If you want is like column vector
+768 numbers elements.
+we multiply the 2, and we obtain our 60, 40 result
+as of the standard rules of the.
+So this is the query version of x 2.
+Then we do the same with the key matrix and the value matrix. And we obtain the key version
+of x. 2, and the
+value version of
+extra. But of course we could call Q. 2 k, 2.
+So I had append problem. So Q. 2, we set a, 2 and B 2
+for briefness. So these are these products between these matrices and the Q, 2, a. 2 and v. 2 are all 64 d. In our assumption.
+Now.
+what do we do with them?
+The first thing we do? We take the query. Q. 2.
+And we compare
+that key key. The query, Q. 2. With the keys.
+the key.
+Values
+of all the tokens, including token 2 itself had.
+Do we compare we compute the so-called product which is just the matrix product between
+Q and K.
+Let me debate a little bit. What's on the screen now?
+So and look into x 2. We have form Dala, q, 2, which is a vector, of 64 d.
+For all the tokens
+including x to itself. We have a one k.
+and K, 4, all of the same size.
+then these
+get multiplied by Q, 2.
+Transpose.
+Okay.
+this product is one times 64.
+The vector, this is 64 times one.
+The product ends up in a single scanner value
+one by one, or simply a number.
+You remember, the top product is the first element of the first vector multiplied by the first element of the second, vector
+the second element of the first, vector the second of the second, the third third, all corresponding elements get multiplied and add it all up. That's the
+plot it. So we compute the dot product.
+The result of 2 vectors is maximum, if they are the same.
+if they are portable
+as points in in a space of 768 d. Or 64 d. Sorry. In this case they are orthogonal. They represent points that respect to the origin are orthogonal.
+The product is 0. So this product can go from a maximum value to 0
+can also be negative. obviously depending on the values of the elements. So it has a range of values where some values mean that the 2 vectors agree completely.
+and other values mean that they disagree
+oblique or partially
+so. Fundamentally, this color becomes a weight
+that measures the matching between the query of the token, we are interested in token. 2, and the keys of all the token
+in this way. Query 2 is attending to all the tokens.
+and computes a weight of the quality or intensity of the matching.
+This weight is somehow normalized, because all these products across the entire token
+you compute the soft max
+of it.
+so that this product, instead of being in a range minus plus, becomes 0 one like a probability.
+And also you can normalize this by typically the square root of the 64
+small tricks. That kind of manipulate the dot product
+through the softmax battalions. Proper probability range into a
+weight between 0 and one. A weight of one means perfect match, a weight of 0 means
+worst possible match.
+So in a way, we are comparing this query, back up with the key
+of the token itself, and all the other tokens. If they match the value is one or near. If they don't match, the value is 0, and this token cannot match all the tokens
+with one, because, as usual for probabilities, the softmax returns
+set of weights.
+of whose total sum is one, so it forces pretty much the attention
+of the query to the key.
+The best matching key will have the largest weight, and the others will have lower weight.
+What do we do then, with these weights that we have just computed?
+We said that scales between 0 and one. we multiplied them by the corresponding
+Thank you. The failures. The third animal we had computed be wild people.
+now multiplied by the
+corresponding weight. So this is the weight
+token 2 for token 2.
+And this is the value 2. This weight will let that value flow through
+with some weight. If the weight is 0 v. 2 is killed off.
+If the weight is one b. 2 is let go through in its thin type. and anywhere in between. The same is for all the other 3 tokens 2 times k. One.
+Compute the weight and multiply by v. One. That's it's like a tab.
+The weight is like a tap that lets values, e, one e, 2, e, 3, and 4 go through
+clock.
+The second slot. Let these values flow through and then add all up. So we do these, and we add this up at position 2. For tokens, one token, 2, token, 3, and tokens.
+So the values of v. One, v. 2, v. 3, v. 4 in. Slot 2
+are weighed by the use of q. 2. The query of that token.
+or that slot.
+and then we let them through at the map, and we get what comes out.
+So what comes out? What comes in into token 2 is x. 2.
+What comes out
+is the edit sum
+through weight of the values of all the 2. And that's why each position.
+the code in an encoder of a transformer is able to take into account all the other tokens
+at the same time
+most often, and not always, the value of the token itself. In this case v. 2 may be the one with the highest weight.
+but depends on the processing. In some cases it may be any of the other tokens that take the largest way.
+In some cases 2 tokens may get exactly the same way in this position in position. Slot 2. The saying that we described for slot 2 with query, q. 2. We repeat for slot, one for Slotu, and so for Slot 3 and for slothful. So we got the outputs from all the slots in every such slot.
+with the corresponding query.
+we assess the match with the keys of the other tokens, and we let the corresponding pedest
+a weighted sum.
+What we described here
+is exactly what happens. It's exactly what the self-attention is.
+It's a sort of database or associative memory or dictionary, because you can think of the query as the element you're looking for.
+The keys are the keys in a database. If there is a match
+the value will be recovered will be extract.
+This case the match is not 0 or one
+full or missing.
+it's anywhere in between. So we let flow through all the elements in proportions.
+This is done exactly things, but
+to have more information. The transformer does this multiple times
+what we have described now they call it a head
+ahead is just exactly the mechanism we describe. Now. why not do it? 4 types. for instance, we could do these
+8 times or 4 times or 12 times in complete parallel. So what we describe. We do it not just once. But so what is the point of doing the same thing? Multiple times?
+It's because the matrices QA. And B. But we, posited in the beginning are randomly initialized.
+and then they are learned as optimal parameters through the standard back propagation mechanisms.
+So if, instead of one copy of this mechanism. We had, for instance, say 12. Well, then, we have 12 chances to start from 12 different random initialization
+to somehow progress during the learning stage
+what values for the corresponding QK. And B. And in a way, there are different views on the same data, because we start from different languages and learning. It's not
+convex will end with different values for QK. And V in the 12 different heads if we assume to have 12 heads. So let's say that in our assumption we assume to have
+well, such as it simply means. What we describe now is done not once, but 12 times in parallel
+with the parameters, the mattresses, Euclid starting from different values.
+So what do we do with the output of the 12 heads?
+We are now ready to reconstruct a vector of the same size as the initial size. Because we said that every head
+produces the weighted sum of the values of its input which is a 64 d. Vector
+if we have 12 such heads.
+64 is type 12 is 768 d. So we just co-cutinate the app 12 different heads to form again padding of exactly the same size as the input event.
+In order to achieve exactly what we had to.
+Once within the beginning, we want the output size to be the same as the input size that instead of having just one encoded layer, we can stack another and another and another.
+I will stop here because there's many other small details about how transformers work. But the mechanism, self attention, which in food is called
+multi-headed
+self attention.
+For the obvious reason we just said, the mechanism of self-attention is replicated
+8 times 12 times. It all depends on the specific size chosen for the embeddings and addresses.
+but with examples
+used, 760 d. Input every head produces an output which is 64 d. We have 12 heads, 64 times 12768. But they need to hold these outputs to one.
+and then we can stick another layer. Let's forget about the normalization and feed forward network for now. But
+in a sense, that's exactly what comes out. A hidden state, a hidden vector of exactly the same size as its ink.
+so that multiple layers can be stacked.
+ this is enough for the encoder.
+Now we talk about the decoder.
+The encoder is, as we say, the cat is
+on.
+How does the decoder produce the translation?
+The decoder has exactly the same architecture as the encoder that fundamentally
+exactly the same network.
+But
+the input to the decoder network
+is given one token at a time.
+So while people hear and say that that the the encoder is parallel, because what we described before has no first and last, all the positions are encoded through the position, encodings, and all the all the processing we had described can proceed in parallel for all the
+but the decoder. No, the decoder works sequentially from a logical perspective, has to, because you cannot produce at once.
+All the output tokens.
+In reality there is a branch of studies of transformers called the known autoregressive Transformer Nat.
+So here, that is, attempting to do exactly that, to produce the output in one go.
+The ordinary decoder doesn't do. The auditor decoder looks at the input of the first token first in the first cycle
+puts a special in which is a token called the beginning of Saint Tens.
+What is a special code? A special token is a string
+that can pretty much never occur in text.
+It's like a word, another token that we simply, if we had our vocabulary, I'll throw here now the vocabulary we said, we have word cat
+word is we can also have. Would BOS. Enclosed between 2 square brackets or 2
+pipe signs whatever. So, some simply a string that we are.
+It's impossible statistically, to encounter the text.
+so it will never be used as an ordinary token
+that has its own position in vocabulary
+and its own embedding.
+So it's just a word that is unlikely to occur in natural text that we reserve for special use in this case, obviously to begin our translation.
+How is this embedding, treated in the decoder? Exactly like the tokens are treated
+anchored. So it goes through the same mechanism, self attention, stack layers, and so forth. And at the end
+we'll produce here
+probability over the vocabulary. Typically what we do with that probability we choose the largest value.
+and the word in the vocabulary which is attached to the largest baby.
+This is called the arg. Max atmax means to take the word
+vocabulary generates the largest probability in the first slot.
+hopefully. That will be the word le.
+because we hope that the decoder is able to translate correctly from English to French.
+so we hope that the world, the largest probability.
+not necessarily by a large margin, doesn't matter, because just arc Max, the word of the largest probability, but we hope that is the correct word
+when the decoder translates incorrectly, simply because the probability assigned by the first log
+vocabulary, but the vocabulary will not have the as the largest probability somewhere else.
+Then this word lay. The first predicted word
+is used as the second token in.
+That's why parliamentary. The decoder has to proceed sequentially because it uses its own predictions
+as the input for the next tokens prediction. So there has to, of course, proceed in some kind of sequential way.
+ it's possible to
+progress. Not one prediction on, but maybe 5 or 10 small number, and in the end choose the most likely of all this is called beam search.
+whereas what we described before in the library is called greedy, decoding
+in search progresses, maybe 5 or 10.
+It's different attempts at translating
+first predicted word becoming the second input. And then here.
+hopefully. the prediction, the second slot will be correct. Shot.
+then shot becomes the next input word until we finish until we get the last word in prediction. That last word in prediction is followed by a special token that hopefully will predicting the correct
+point. The sequence which is the end of sentence.
+End of sentence, will terminate logically the sentence in output and will tell the user. This is the output of the decoder.
+ how do the 2 networks are connected?
+The 2 networks are connected through a mechanism called crossattention. which is exactly like the self-attention.
+In what way differs very simply this time with the queeries
+of the tokens
+in the decoder, the query component of the tokens in the decoder. We attend not only
+to the token
+that we have already translated in the decoder.
+but also to all the tokens in the encoder. The values in the encoder
+so discuss attention. Mechanism allows the decoder to be informed
+when it encodes the hidden states of any token.
+allows the hidden State to
+allowed. Sorry the recorded slot to be informed by all the preceded previously translated tokens, and all the tokens encoded by the
+so the 2 networks are fundamentally almost identical up to the point that many implementations don't like. Chat generally don't use the encoder at all
+uses only the encoder also sorry, only the decoder also, for the.
+we will talk about that in one. Sec.
+So this is what happens in the decoder decoder decodes one to the time.
+a vector. Of probability
+about the request.
+Thanks.
+How do we obtain that probability? Vector this is interesting. So let's say that this is the
+decoder.
+the first slot of the decoder, the one corresponding to the beginning of sentence, special token.
+and, as we said before, the Decoder is identical to the encoder, we will have a hidden state from on the final layer
+as the output we had speculated before, there was 7, 68 d. Let's make the same assumption.
+So this hidden state is 768 DI want to obtain probabilities over the vocabulary. How do I obtain that?
+Well, all I need is a matrix
+of size, 7, 68
+on one side.
+and size vocabulary on the other.
+If the vocabulary is 30,000 words.
+this matrix would have size 7, 68 times 30,000, 7, 68 times. For this out means that I multiply 7, 68,000 metrics. And the output is again a vector, of 30,000
+Ombudsman. These numbers are the logits that I put inside the soft Max
+and the softmax converts these numbers into zeros. To ones. Sum, one
+probability values.
+If I want to choose the Argmax. I really don't even need to bother to compute the probabilities. The logits are enough, because the maximum of the logins is the maximum of the probabilities.
+So if I would just want to find the most probable word, for instance, what lay
+vocabulary.
+the maximum of the logic of the
+logits of the maximum corresponding probabilities where I can obtain from the logic, and now pass them as arguments on a softmax is the same one.
+So I. If I just want the Atmax, I can compute the Arc Max, of the knowledge. It's interesting that as variables inside the code.
+these values are always called precise in lodgings
+and props.
+This is almost like a universal contention over the name of the corresponding value. because logits at these V values props at the corresponding probabilities which are just the softmax of the login.
+And if I want to choose the word at this lot, I just take the largest and the world that causes the largest value which in this case hopefully is worth.
+Okay. So we have this final matrix, which incidentally is exactly the same size as the embedding matrix, the vocabulary, 7, 68, the size of the embedding times the size of the vocabulary. It's like a vocabulary
+matrix in rivers.
+because this goes from 7, 68 to V, whereas when we do the input for the encoder.
+take 3 elements in the vocabulary, we turn them into 7, 68 d.
+Embeddings to become the here. We do the opposite because we want words in our.
+So that's exactly how things were on the decoder slot.
+2 important variations
+about this scheme.
+So the first is the encoder. Only network
+encoded all the transformed as, or simply encoded all the neck.
+What usage can we have for our transformer. Then, instead of being included in the code that, like we have explained now. it's only an encoder.
+It's a super useful network that is an encoder on the network is probably the most famous work course of it.
+So forget about the decoder. This time we cut transforming half, and we use only the first half.
+How's the encoder used
+exactly like before? And from every slot the cat is.
+we have the
+final vector, say, X, one, prime
+x. 2, prime ex and prime. These are the final states. Sorry, final layer, hidden states up 7, 68 d.
+Well, there are cases where, for instance, minor pitask is not translation or summarization or generation of a sentence.
+Perhaps I just want to attach a label.
+Each of my words tasks like named entity, recognition. potentially relation, extraction. Many, many energy tasks fall into this.
+So we don't need the decoder to solve these tasks, because my goal is to have an output here that says
+this word is a noun
+is a class label instead of a word. The output of this
+architecture is not a sequence of words or a sentence is a sequence of class labels, one per token
+in the
+how large is the class set depends on my task. If I want, for instance, to label each word in the input as noun, verb, adverb
+need as many classes as I want to distinguish.
+So if I have, I don't know 10 classes.
+Then what I have here is a final matrix that converts 7, 68 d. Of x
+prime into 10 numbers this time.
+because this time. I don't want to output words. I want to output labels
+in a class set that is much smaller typically than a vocabulary. So my final matrix, the one that leads to the logits and the
+probabilities is only 7, 68 times 10 divided passes.
+This allows me to have a class label predicted
+of the slots of encoder. I don't need to have the decoder at all. This is how Bear works
+first main usage, opera.
+Another possibility is to use this same encoder on the network for
+classification of text sentiment analysis.
+For instance, I enter my entire text, and then I use only one of the out
+to create a probability vector over the class set of the sentiment.
+Not all of the other need and labels. In this case I need one label only for the entire sentence.
+This is a sentence classification, task.
+or text classification task. The text is classified as a whole into one of a few classes. So what is happening here. The text classification. I could take, for instance, this.
+if I have 2 classes of text, positive and negative, for instance, or 3 positive, negative and neutral. I will take these 768 numbers in output. From the final layer
+I will pass them to a matrix that turns 70 60 to 3,
+and the output. The 3 outputs are the probability values of the logics of the 3 classes, and then I choose the art. Max. given that this token x. One has been influenced by all the other token.
+putting the encoding. and not once.
+but multiple times, one in every day, and one in every head. So it's so
+intertwine that, unable to classify the entire text
+by taking the probabilities of only one of the tokens. But of course, reading, the training of ejected that were playing that.
+But the output
+of the network only one produces sufficient probability values to classify the whole text in
+glasses of.
+Now. this is
+exactly what happens, but to make things a little bit better. What people do in birth is to add
+special token at the beginning. Just do not introduce a bias
+in favor of any of the actual.
+So exactly what you see here. But the first token, input, instead of being the actual first token of the sentence
+is another of those special tokens that I'm adding arbitrarily.
+is called the CLS.
+Then I have the that I have had, and that I
+so this time there's no foundational difference from what we said before. The only difference is that this lot that produces the probabilities
+that I'm using to classify the text into one of the given classes is not
+any of the actual token is a special token reserved for this
+task classification. That's why it's called Cls bus.
+so that in a way, yes, these are the probabilities that we use. Yes, they're influenced by all the tokens in the sentence. But no token plays a special role, no token is elected to be the one that outputs the probability of the text creating some kind of imbalance or asymmetry
+reference. For
+so in this way, Sierras is the one to generate babies that I eventually use
+fax and choose the password
+delete this
+buildings. And now we talk briefly about Gp.
+which is the Champ. Yeah of the transformers, which are decoder. Only networks.
+I think the idea of an encode around the network is quite into it. The idea of a decoder on the network could be more confusing. Why and how it works. The reality is that it's very, very similar to an encoder follow it.
+So the idea was decoded around the network is to have a big decoder.
+where also the input is provided as tokens of the
+Dick order instead of the
+so in our case, the hat
+is on the mat.
+All the cat is on
+will be, not the tokens in input to the encoder, but the first tokens of the decoder.
+So before this is contradictory, before we said that the recorder needs to output them sequentially one at a time, because the one predicted here becomes the input to the next, and so forth.
+Well, yes and no. If we already know what we want from the first few slots, we can strap them to these values. So we can say that the is the input and cat is the output
+in a supervised way. We don't let the system choose. We say there is. The input CAD is the output of the first token cat is the input, to the second token, and is, is the output of the second. Toe
+is
+is the input to the third token, and on is the app.
+On is the output of this token, and then
+what? And here we let the decoder continue. So we let this mechanism of Ag. Max building the probability picking the Max and using the Max as the input for the next token.
+after the prompt is finished.
+So the prompt and the input to the encoder are exactly the same thing.
+with the difference that the prompt is used as the first few tokens of the decoded sentence rather than as actual inputs to the encoded network.
+So at that point where the question mark is, I make my first prediction, which hopefully will be late.
+and then this leg goes into and then shot.
+so the tokens of the prompt are nothing else than forced tokens or false choices of the first few slots of the decoder. Once we finish the prompt.
+then we expect
+the decoder to continue to predict from that. That's the reason why these tokens are
+known as prompt, because the prompt, the decoder to continue from when the prompt finishes.
+So there is no encoder. There is no other input conveyed. But think about what happens here. I mean, all these hidden State calculation still takes place. All the hidden State calculation here takes place. All the hidden calculations place all the hidden calculation. And then here we finally got our vector of probabilities
+when we need to choose the At-max hopefully
+correct.
+So now, these all these hidden states through the self attention, whenever I'm here at the next slot.
+I will have the information
+of the values
+and hidden states computed by all the previous slots. So it's full self attention to all that has been said before
+and since. There is no formal input.
+that's all the decoder uses to make the prediction of the next word.
+One last thing is
+how any such networks get trained. be it a full transformer with the encoder in the code. or and encoded on the network like that. or
+a decoder on the network like Gp.
+we won't go into depth of the training
+right now. I believe this session is long enough, but the concept of the training is relatively simple. Training is always supervised.
+What does supervised mean? Let's see an example for clarity.
+In the case of the translation that we used from the start. We have the encoder. Here.
+We have the decoder here connected. As we said before, we have the tokens in the input for one more time.
+and we have the desire
+translation in out what we manually believe to be the correct translation.
+So we force it us out.
+We say, this network, once starting with the beginning of sentence.
+Then hence to predict. late in the first lot
+in the second slot with laying input has predict.
+Sorry shaq with the shot in input the next lot has to produce
+and so forth. What does hast to predict me? We know that in output here we have a probability vector when we decide when we make inference, we choose
+the probability, the largest probability, and the word that has it. So the word with the highest probability.
+At training time, we do the opposite. The parameters are still floating, the paradise are still adjusting. So what we say is this, we put as the training objective.
+alias loss, function, training.
+objective.
+We write it a little bit more clearly.
+The training objective, which is that again.
+one name training.
+active
+also known as loss function in the code
+is the target of the training, or what
+motivates the computation of the gradients that data the parameters through back propagation and everything which is done automatically. But we still have to say, what do we say? We ask the model to adjust its parameters so that word lay.
+Add the first lot would have the highest possible probability.
+Word sha, at the second slot with laying input would have the maximum probability.
+Word S in output will have the maximum probability. We shine input late before the Shah, his outputs and everything else that proceeds.
+So with all the previous words and all the inputs we want that particular wording. So the goal is to massage
+the probability that the model is able to output
+through changes in its internal parameters, so that the word which add the correct translation. Well.
+what we manually notate is the correct translation or reference translation are each assigned maximal
+possible probability. This objective is universally known as the negative log likelihood or cross entropy. These 2 names are completely interchangeable.
+so the goal is for the model to assign the largest possible probability to the tokens that are regarded as the correct target of that translation.
+So typically, you will see something like this in the papers.
+The probability
+of token. Say T
+in the teeth slot of the decoder
+be shot.
+for instance. given all the previously translated tokens, one d. Minus one.
+and given all the inputs x, 1, 2,
+not necessarily. T, but let's say, T, so these are the probabilities they want to maximize where a YT implicitly as a symbol means shut and y one to T minus one in this case means let
+and x one to T means the cat is on the actually. So given all those
+inputs assign wood. Why t maximum possible probability. Typically, this is done in logarithmic scale. That's why log likelihood.
+We sum it for all the tokens in the output, like the entire sequence
+of the output. Not just word, one or 2, but all of them Leisha,
+And we change with the sign minus in front, because the loss function is typically decreased
+is a convention by the optimizer.
+So since we want instead to increase the log probability, we change the sign. So the decrease of the negative log likelihood is equivalent to an increase of the normal positive log likelihood
+for the classification task the same. But we put the classes as the target for the text classification task the same. But we put the classes as the tile.
+We'll keep it to this. Thank you.

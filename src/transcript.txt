@@ -1,0 +1,2410 @@
+WEBVTT
+
+1
+00:00:07.310 --> 00:00:12.930
+Massimo Piccardi: A transformer is a network consisting of 2 sub-networks.
+
+2
+00:00:14.920 --> 00:00:16.490
+Massimo Piccardi: an encoder
+
+3
+00:00:18.890 --> 00:00:21.480
+Massimo Piccardi: and a decoder
+
+4
+00:00:27.300 --> 00:00:30.700
+Massimo Piccardi: the 2 networks are connected somehow.
+
+5
+00:00:30.710 --> 00:00:33.990
+Massimo Piccardi: and the main usage is as follows.
+
+6
+00:00:35.320 --> 00:00:43.520
+Massimo Piccardi: there is a text in input to the encoder. The text is
+
+7
+00:00:43.720 --> 00:00:45.160
+Massimo Piccardi: like the
+
+8
+00:00:45.940 --> 00:00:46.660
+Massimo Piccardi: cat
+
+9
+00:00:48.770 --> 00:00:49.680
+Massimo Piccardi: is
+
+10
+00:00:50.790 --> 00:00:51.630
+Massimo Piccardi: on.
+
+11
+00:00:53.270 --> 00:00:58.200
+Massimo Piccardi: This text gets split into individual words
+
+12
+00:00:58.290 --> 00:01:02.180
+Massimo Piccardi: which are more commonly called and more properly called tokens.
+
+13
+00:01:03.630 --> 00:01:09.479
+Massimo Piccardi: This action, or splitting the original text into tokens, is called tokenization
+
+14
+00:01:09.690 --> 00:01:18.009
+Massimo Piccardi: and follows a specific algorithm specific for the model or specific for the language, and both
+
+15
+00:01:19.290 --> 00:01:24.030
+Massimo Piccardi: the tokenization of a sentence like this intuitively could be. The
+
+16
+00:01:24.070 --> 00:01:30.039
+Massimo Piccardi: cat is on. so each token will become an input
+
+17
+00:01:30.060 --> 00:01:33.050
+Massimo Piccardi: to the encoder of the transformer.
+
+18
+00:01:34.420 --> 00:01:39.870
+Massimo Piccardi: At the moment the text is still made of strings, the cat is on.
+
+19
+00:01:41.230 --> 00:01:49.049
+Massimo Piccardi: If the transformer is used for a task, for instance, like machine translation, and we are translating from English to French.
+
+20
+00:01:49.360 --> 00:01:55.130
+Massimo Piccardi: Then we expect that the decoder will output something like le chat
+
+21
+00:01:56.700 --> 00:01:59.060
+Massimo Piccardi: est sur
+
+22
+00:02:01.210 --> 00:02:02.550
+Massimo Piccardi: Now.
+
+23
+00:02:03.240 --> 00:02:04.600
+Massimo Piccardi: more
+
+24
+00:02:04.700 --> 00:02:14.779
+Massimo Piccardi: details about the encoding process. So we said that we start with this sentence that gets tokenized, split into tokens.
+
+25
+00:02:14.830 --> 00:02:19.809
+Massimo Piccardi: And then what happens to the tokens? The tokens are part of a vocabulary.
+
+26
+00:02:20.190 --> 00:02:32.619
+Massimo Piccardi: The vocabulary is an intrinsic feature of the chosen transformer. and it's also goes hand in hand with a tokenizer that is also an accompanying feature of the transformer.
+
+27
+00:02:33.370 --> 00:02:39.549
+Massimo Piccardi: So the tokenization splits the sentence according to a vocabulary of tokens.
+
+28
+00:02:40.940 --> 00:02:47.649
+Massimo Piccardi: That is just a long list of correspondences between indices. positions in the vocabulary.
+
+29
+00:02:47.910 --> 00:02:49.420
+just like integers.
+
+30
+00:02:49.730 --> 00:02:52.380
+Massimo Piccardi: and words that are stored in a
+
+31
+00:02:52.510 --> 00:02:53.340
+Massimo Piccardi: at
+
+32
+00:02:54.730 --> 00:02:55.460
+sorry
+
+33
+00:02:57.530 --> 00:02:58.980
+Massimo Piccardi: somewhere, maybe
+
+34
+00:02:59.190 --> 00:03:09.719
+Massimo Piccardi: is and so forth. So the vocabulary that typically that real implementation is something ranging between 30,000 and perhaps
+
+35
+00:03:09.950 --> 00:03:13.850
+Massimo Piccardi: 200,000 250,000 distinct tokens
+
+36
+00:03:15.250 --> 00:03:25.120
+Massimo Piccardi:  creates a correspondence between integer indexes and strings. Matter of fact, after the strings are, and vice versa.
+
+37
+00:03:25.460 --> 00:03:39.410
+Massimo Piccardi: Once the strings are converted into integers. the nature of the token is a string disappears. The encoder doesn't care if the string is short or long, is cat, or or else what are the characters?
+
+38
+00:03:39.450 --> 00:03:43.200
+Massimo Piccardi: Once this action of converting token
+
+39
+00:03:43.220 --> 00:03:46.710
+Massimo Piccardi: in the vocabulary to the corresponding integer.
+
+40
+00:03:47.190 --> 00:03:51.729
+Massimo Piccardi: Only the integer plays a part in the processing of the. Input
+
+41
+00:03:53.490 --> 00:03:58.840
+Massimo Piccardi: so what happens at this point is that attached to the vocabulary, that is.
+
+42
+00:03:58.870 --> 00:04:01.419
+Massimo Piccardi: number of embeddings
+
+43
+00:04:01.590 --> 00:04:06.690
+Massimo Piccardi: in exactly the same amount, and corresponding one to one to the tokens.
+
+44
+00:04:08.010 --> 00:04:17.649
+Massimo Piccardi: These embeddings are typically pre-computed externally, to the transformer that can be updated.
+
+45
+00:04:17.730 --> 00:04:27.290
+Massimo Piccardi: They can be randomly initialized. So there's various strategies to create this table of embeddings. But the size of the table is exactly the same size as the vocabulary.
+
+46
+00:04:27.990 --> 00:04:42.779
+Massimo Piccardi: So when word cat appears in the input is converted to the corresponding integer. and the integer is used to index the corresponding embedding in the table of the embeddings or matrix of the embeddings.
+
+47
+00:04:44.120 --> 00:04:45.240
+Massimo Piccardi: How big
+
+48
+00:04:45.290 --> 00:04:48.910
+Massimo Piccardi: is each embedding, and what is it made of?
+
+49
+00:04:49.260 --> 00:04:53.590
+Massimo Piccardi: An embedding is just a large vector of numbers.
+
+50
+00:04:53.730 --> 00:05:06.589
+Massimo Piccardi: The numbers are typically rather small in absolute value, not exactly between minus one and plus one. But somewhere in that range they tend to be normalized to values which are reasonably small.
+
+51
+00:05:07.810 --> 00:05:16.969
+Massimo Piccardi: and the numbers of elements in each of these vectors can vary from typically a minimum of 256 to
+
+52
+00:05:17.490 --> 00:05:21.610
+Massimo Piccardi: what I've seen, a maximum of 1,024
+
+53
+00:05:21.850 --> 00:05:37.870
+Massimo Piccardi: in typical ranges like 768, 512, 384. So let's make an assumption that these embeddings have a size of 768 dimensions each.
+
+54
+00:05:39.440 --> 00:05:45.680
+Massimo Piccardi: So to repeat, whenever we encounter word cat in the text. This is extracted as a token token.
+
+55
+00:05:45.830 --> 00:05:48.959
+Massimo Piccardi: the index and the index extracts
+
+56
+00:05:49.270 --> 00:05:55.519
+Massimo Piccardi: from a table of embeddings and embedding of size 768.
+
+57
+00:05:55.570 --> 00:05:56.739
+Massimo Piccardi: In this exam.
+
+58
+00:05:59.180 --> 00:06:02.080
+Massimo Piccardi: Let's delete what's on the screen?
+
+59
+00:06:05.790 --> 00:06:12.469
+Massimo Piccardi: Okay, so this conversion is the first step of the processing of the part of the encode
+
+60
+00:06:14.450 --> 00:06:19.940
+Massimo Piccardi:  The embeddings that we have described are called token embeddings.
+
+61
+00:06:20.220 --> 00:06:23.680
+Massimo Piccardi: and that the most important information in to the
+
+62
+00:06:27.840 --> 00:06:30.920
+Massimo Piccardi: so somehow here.
+
+63
+00:06:32.460 --> 00:06:36.460
+Massimo Piccardi: That will be them bedding for the somehow
+
+64
+00:06:37.000 --> 00:06:38.550
+Massimo Piccardi:  at
+
+65
+00:06:38.750 --> 00:06:44.800
+Massimo Piccardi: son embedding is when it's on embedding on its son embedding
+
+66
+00:06:48.920 --> 00:06:52.029
+Massimo Piccardi: these token. Embeddings are the main.
+
+67
+00:06:52.500 --> 00:06:53.230
+Massimo Piccardi: Input
+
+68
+00:06:53.830 --> 00:06:56.760
+Massimo Piccardi: so matter of fact, they are
+
+69
+00:06:57.300 --> 00:06:58.040
+Massimo Piccardi: to
+
+70
+00:06:58.520 --> 00:06:59.240
+and quota
+
+71
+00:07:00.260 --> 00:07:05.689
+Massimo Piccardi: the There is a possibility to add some values to them
+
+72
+00:07:05.940 --> 00:07:09.170
+Massimo Piccardi: which go under the names of
+
+73
+00:07:09.230 --> 00:07:10.649
+Massimo Piccardi: position and ready
+
+74
+00:07:19.530 --> 00:07:21.550
+Massimo Piccardi: and segment embeddings.
+
+75
+00:07:26.670 --> 00:07:31.000
+Massimo Piccardi: the first tab. much more important keeping. And
+
+76
+00:07:32.580 --> 00:07:36.060
+Massimo Piccardi: so the position embeddings play this role.
+
+77
+00:07:37.210 --> 00:07:41.760
+Massimo Piccardi: The token embeddings that we have seen don't depend on the position in the sentence.
+
+78
+00:07:42.740 --> 00:07:49.040
+Massimo Piccardi: So the embedding of what cat is the same, no matter where cat, as a word appears in the input sentence.
+
+79
+00:07:49.510 --> 00:07:50.180
+Massimo Piccardi: Now
+
+80
+00:07:50.590 --> 00:07:52.060
+Massimo Piccardi: the
+
+81
+00:07:52.510 --> 00:08:00.889
+Massimo Piccardi: that but given that, the processing we will see in a minute. Inside the encoder is completely symmetric, which means every token.
+
+82
+00:08:01.180 --> 00:08:02.310
+attends
+
+83
+00:08:02.410 --> 00:08:05.490
+Massimo Piccardi: all the other tokens, and vice versa.
+
+84
+00:08:05.910 --> 00:08:13.010
+Massimo Piccardi: The processing inside code is enabled to distinguish the position of the
+
+85
+00:08:13.330 --> 00:08:17.180
+Massimo Piccardi: in that sense. It is very much like having a set
+
+86
+00:08:17.310 --> 00:08:22.539
+Massimo Piccardi: of tokens in input rather than a sequence from the point of view of the internal process.
+
+87
+00:08:23.200 --> 00:08:25.480
+Massimo Piccardi: So how can the the
+
+88
+00:08:25.630 --> 00:08:31.150
+Massimo Piccardi: data reflect the position so that somehow this information is not lost
+
+89
+00:08:31.210 --> 00:08:39.850
+Massimo Piccardi: for the purpose of know of the processing? Obviously, if you swap the words in order, you would expect the output in the translation also to change.
+
+90
+00:08:40.919 --> 00:08:49.810
+Massimo Piccardi: So the key information is conveyed by these position embeddings, position, embeddings are simply number
+
+91
+00:08:50.700 --> 00:08:52.120
+Massimo Piccardi: that gets added
+
+92
+00:08:52.620 --> 00:08:57.520
+Massimo Piccardi: to all the 768 elements of the token and addicts
+
+93
+00:08:57.770 --> 00:08:58.989
+Massimo Piccardi: like an offset.
+
+94
+00:08:59.630 --> 00:09:03.919
+Massimo Piccardi: If the number is positive, we'll shift all the values of the token embedding up.
+
+95
+00:09:04.260 --> 00:09:08.629
+Massimo Piccardi: if the number is negative, will shift all the token embeddings down.
+
+96
+00:09:10.310 --> 00:09:19.610
+Massimo Piccardi: Typically, if you read a bit of details. The most common is to use a sinusoid just to extract the values so index 0, the first index main
+
+97
+00:09:20.270 --> 00:09:34.790
+Massimo Piccardi: extracting, adding this value index one by add this value index 2 meters. So it matched to get distinct values for each of the positions, instead of just adding 0 1, 2, and 3, which would sort of bring the values out of scale.
+
+98
+00:09:35.720 --> 00:09:49.080
+Massimo Piccardi: The standard or default implementation of the position embedding is to take the values of a sinusoid that will still be distinct, and they will be unique enough to represent the different positions of the words in the
+
+99
+00:09:50.090 --> 00:09:51.840
+Massimo Piccardi: the thing that is amazing.
+
+100
+00:09:52.020 --> 00:09:58.269
+Massimo Piccardi: in my opinion. is that this value is just added
+
+101
+00:09:58.370 --> 00:10:03.810
+Massimo Piccardi: to the token embeddings. So the token embedding 768 numbers. Ed.
+
+102
+00:10:04.060 --> 00:10:11.390
+Massimo Piccardi: The value for position, 2. Shift them all up, or shift them all down according to where you are in the psiloso.
+
+103
+00:10:12.470 --> 00:10:16.600
+Massimo Piccardi: Just this action of offsetting slightly
+
+104
+00:10:17.270 --> 00:10:21.000
+Massimo Piccardi: all the values of the token embeddings is sufficient
+
+105
+00:10:21.250 --> 00:10:30.809
+Massimo Piccardi: for the encoder to be able to tell apart their position in the sentence. So we don't encode the index of the position in any kind of explicit.
+
+106
+00:10:31.360 --> 00:10:39.570
+Massimo Piccardi: The position is encoded implicitly by this action of shifting the values or down in such a small shift.
+
+107
+00:10:39.790 --> 00:10:45.469
+Massimo Piccardi: It's sufficient for them that for the encoder to make sense of the positions of the values. Talking.
+
+108
+00:10:48.920 --> 00:11:00.330
+Massimo Piccardi: Less important is the segment embedding, or at least less important in practice. It seems to have been used far less for what I can say. The default value of the segment embeddings is 0
+
+109
+00:11:01.220 --> 00:11:03.009
+Massimo Piccardi: in the mind of the
+
+110
+00:11:03.100 --> 00:11:06.469
+Massimo Piccardi: designer of the transformer.
+
+111
+00:11:06.790 --> 00:11:16.609
+Massimo Piccardi: They're all played by the segment embeddings is similar to that of position embedding, but is useful when your input contains not one sentence, but maybe 2,
+
+112
+00:11:16.680 --> 00:11:18.609
+Massimo Piccardi: potentially 3, 4.
+
+113
+00:11:19.230 --> 00:11:30.870
+Massimo Piccardi: When is this common? When is common for the input to contain 2 sentences, for instance, for all the Lp tasks, like, for instance, a comparison of sentences. You want to assess the similarity.
+
+114
+00:11:30.880 --> 00:11:42.009
+Massimo Piccardi: 2 sentences you want to assess. If one sentence is implied by the other sentence. or one sentence contradicts the other sentence.
+
+115
+00:11:42.200 --> 00:11:51.050
+Massimo Piccardi: or if 2 entities and in a relation. So there are many cases in which the input an energy task
+
+116
+00:11:51.490 --> 00:11:54.379
+Massimo Piccardi: his 2 sentences, or
+
+117
+00:11:54.450 --> 00:11:59.390
+Massimo Piccardi: and these sentences in a way should be told apart to some degree.
+
+118
+00:12:00.170 --> 00:12:07.409
+Massimo Piccardi: So one way to do that is, to use this extant embeddings, the sentence embeddings to again shift.
+
+119
+00:12:08.430 --> 00:12:09.540
+or down
+
+120
+00:12:09.550 --> 00:12:17.620
+Massimo Piccardi: all the embeddings of the first sentence, compared to the embeddings of the second sentence, like adding one, for instance, as a number.
+
+121
+00:12:17.970 --> 00:12:21.219
+Massimo Piccardi: all the elements, 768 d.
+
+122
+00:12:21.570 --> 00:12:30.979
+Massimo Piccardi: Of all the tokens of the second sentence, and instead, leaving the other embeddings, the embeddings of the first sentence in the initial range.
+
+123
+00:12:31.230 --> 00:12:42.619
+Massimo Piccardi: So this action of shifting up or down again all the token embeddings of one sentence with respect to the other helps the model to tell apart the tokens of one sentence
+
+124
+00:12:42.690 --> 00:12:52.560
+Massimo Piccardi: versus the token of the other sentences, and to increase the accuracy in typical penalty tasks that have 2 sentences in each. Having said that.
+
+125
+00:12:53.030 --> 00:13:06.460
+Massimo Piccardi: as I said, segment, embeddings don't seem to have had much popular use, because there is another way to separate 2 sentences, as in which is to interpret between them a special token
+
+126
+00:13:06.620 --> 00:13:08.989
+Massimo Piccardi: that is called the separator, though.
+
+127
+00:13:09.390 --> 00:13:19.569
+Massimo Piccardi: So another way to obtain that kind of separation from input one or sentence input sentence, one input sentence 2 is to add one or potentially more
+
+128
+00:13:20.850 --> 00:13:24.290
+Massimo Piccardi: separating special separating tokens.
+
+129
+00:13:24.550 --> 00:13:33.740
+Massimo Piccardi: So add an extra token which is not a big burden, instead of adding these shifts or offsets, called the sentence sorry the segment dynamics.
+
+130
+00:13:33.800 --> 00:13:36.429
+Massimo Piccardi: It seems to be much more practice
+
+131
+00:13:37.800 --> 00:13:43.450
+Massimo Piccardi: in the usage, common usage of transports, but just to know about them, because
+
+132
+00:13:43.810 --> 00:13:45.840
+Massimo Piccardi: like libraries like, but
+
+133
+00:13:46.090 --> 00:13:53.859
+Massimo Piccardi: refer to these token embeddings that we mentioned before position embeddings that we mention here, and sentence embeddings
+
+134
+00:13:53.890 --> 00:13:58.270
+Massimo Piccardi: that by default are 0 for all the tokens in the sentence. So
+
+135
+00:13:58.510 --> 00:14:01.719
+Massimo Piccardi: they don't exist unless you explicitly.
+
+136
+00:14:04.880 --> 00:14:05.580
+Massimo Piccardi: Okay.
+
+137
+00:14:10.020 --> 00:14:15.480
+Massimo Piccardi: So we have formed these embeddings in input to the
+
+138
+00:14:15.890 --> 00:14:16.890
+Massimo Piccardi: encoder.
+
+139
+00:14:17.480 --> 00:14:23.099
+Massimo Piccardi: as we said, repeated briefly, token plus position and potentially segment.
+
+140
+00:14:23.150 --> 00:14:33.000
+Massimo Piccardi: But in the end they become just long vectors of 768 d. That go into input in each token slot of the end code.
+
+141
+00:14:33.700 --> 00:14:39.669
+Massimo Piccardi: What does the encoder do with them? So, in the first place, an encoder is not
+
+142
+00:14:40.730 --> 00:14:42.530
+Massimo Piccardi: single layer
+
+143
+00:14:42.580 --> 00:14:51.000
+Massimo Piccardi: of network is a network organized over multiple layers. So in reality there is an encoding layer at the
+
+144
+00:14:51.020 --> 00:15:02.939
+Massimo Piccardi: input the one that we just mentioned. There's another second encoding there. Above that there's a third encoding there. There's a fourth encoding there typically stand at the small
+
+145
+00:15:03.760 --> 00:15:09.280
+Massimo Piccardi: transformer has 6, including theirs. A larger one has 12,
+
+146
+00:15:09.410 --> 00:15:14.929
+Massimo Piccardi: but the number is completely arbitrary. You can add and remove as well as many as you like.
+
+147
+00:15:15.740 --> 00:15:16.430
+Massimo Piccardi: so
+
+148
+00:15:16.600 --> 00:15:19.820
+Massimo Piccardi: think they are completely identical.
+
+149
+00:15:20.100 --> 00:15:22.449
+Massimo Piccardi: So the only difference is that
+
+150
+00:15:22.810 --> 00:15:30.700
+Massimo Piccardi: the first one takes an input, the embeddings and outputs something that is called hidden states
+
+151
+00:15:30.840 --> 00:15:34.590
+Massimo Piccardi: that have exactly the same size. 768 d.
+
+152
+00:15:35.220 --> 00:15:39.449
+Massimo Piccardi: Hidden states of the first layer become the input to the second layer.
+
+153
+00:15:40.060 --> 00:15:42.750
+Massimo Piccardi: which outputs hidden states of the second layer
+
+154
+00:15:42.860 --> 00:15:53.870
+Massimo Piccardi: that become the input to the next, until eventually you have final hidden states. Let's call them x one prime XN. Prime. If we have N tokens.
+
+155
+00:15:53.880 --> 00:16:02.450
+Massimo Piccardi: which are the hidden states of the final layer in input, let's call x, one XN.
+
+156
+00:16:02.580 --> 00:16:05.410
+Massimo Piccardi: The embeddings that we have explained before.
+
+157
+00:16:06.410 --> 00:16:11.009
+Massimo Piccardi: So the embeddings we have explained before go in input
+
+158
+00:16:11.650 --> 00:16:18.229
+Massimo Piccardi: we had 4 tokens. We would have x one x 2 x 3 and x 4, where x one is the embedding
+
+159
+00:16:18.270 --> 00:16:21.960
+Massimo Piccardi: upward x. 2 is the embedding award.
+
+160
+00:16:22.380 --> 00:16:23.340
+and so
+
+161
+00:16:24.430 --> 00:16:25.440
+Massimo Piccardi: so the
+
+162
+00:16:25.790 --> 00:16:37.730
+Massimo Piccardi: embeddings become hidden states of exactly the same size which makes it possible for another identical layer to process those and over and over and over, until finally we get the final outcome.
+
+163
+00:16:38.300 --> 00:16:41.840
+Massimo Piccardi: hidden states of the very final layer of the income.
+
+164
+00:16:45.200 --> 00:16:48.120
+Massimo Piccardi: How each layer works
+
+165
+00:16:49.420 --> 00:16:50.680
+Massimo Piccardi: delete these.
+
+166
+00:16:52.160 --> 00:16:58.720
+Massimo Piccardi: Each layer is composed of a few sub-networks.
+
+167
+00:16:59.240 --> 00:17:03.689
+Massimo Piccardi: The most important of all is called the self-attention.
+
+168
+00:17:04.609 --> 00:17:12.360
+Massimo Piccardi: Self-attention is really important is often cited is often used in papers, so it's very important to understand how it works.
+
+169
+00:17:13.400 --> 00:17:17.119
+Massimo Piccardi: The other networks are, I think, because of
+
+170
+00:17:18.579 --> 00:17:26.370
+Massimo Piccardi: very fresh. We checking this, I think there's a so-called normalization layer followed by a feed-forward during that.
+
+171
+00:17:28.460 --> 00:17:29.950
+Massimo Piccardi: This architecture
+
+172
+00:17:30.010 --> 00:17:42.990
+Massimo Piccardi: potentially could change. There's been so many variants. But in the standard transformer, the one that is also very well explained and beautifully explained, that transform the block of J. Alab.
+
+173
+00:17:45.300 --> 00:17:49.019
+Massimo Piccardi: which contains virtually every comment I'm making today.
+
+174
+00:17:49.910 --> 00:17:56.129
+Massimo Piccardi: But this helps as a way to understand the block more easily and more gradually
+
+175
+00:17:56.680 --> 00:17:59.040
+Massimo Piccardi: with the narrator's voice over it.
+
+176
+00:17:59.740 --> 00:18:04.260
+Massimo Piccardi: So self-attention, normalization and fit forward, final, feed-forward.
+
+177
+00:18:04.470 --> 00:18:15.740
+Massimo Piccardi: These are not so important. The self-attention is that important is perhaps the most. the characteristic network of the transform.
+
+178
+00:18:16.220 --> 00:18:28.450
+Massimo Piccardi: The other networks have been used in many other euro models, deep models. But the self attention, in a way, is what people tend to associate with the transformer. As it's main, it
+
+179
+00:18:29.640 --> 00:18:30.310
+should.
+
+180
+00:18:31.890 --> 00:18:38.870
+Massimo Piccardi: So, to understand the self-attention, it will become very clear. There's a beautiful analogy, I believe, that
+
+181
+00:18:39.090 --> 00:18:44.189
+Massimo Piccardi: is, with associative memories. Our associative memories work.
+
+182
+00:18:44.930 --> 00:18:49.070
+Massimo Piccardi: So we have our 4 tokens, we said, x. One x, 2
+
+183
+00:18:49.180 --> 00:18:51.030
+Massimo Piccardi: x. 3 x. 4.
+
+184
+00:18:52.450 --> 00:19:00.860
+Massimo Piccardi: Tokens from strain to indexes, indexes, token, embeddings, position, embeddings x. One. Is the embedding of the first toe.
+
+185
+00:19:01.040 --> 00:19:01.710
+Massimo Piccardi: And so
+
+186
+00:19:02.670 --> 00:19:11.450
+Massimo Piccardi: so the let's look at any of them, because the beautiful thing is that the processing is identical for any of them.
+
+187
+00:19:11.990 --> 00:19:15.350
+Massimo Piccardi: Let's look, for instance, edx. 2. The second.
+
+188
+00:19:17.340 --> 00:19:27.219
+Massimo Piccardi: what we want to is to process this x, 2, such that at the end, from the network we will have another set. Call it simply x, 2. Prime, an output
+
+189
+00:19:27.700 --> 00:19:34.059
+Massimo Piccardi: in the slot that corresponds to the second token. So from the second token out.
+
+190
+00:19:34.870 --> 00:19:44.530
+Massimo Piccardi: we want something different, obviously, from x. 2. That takes into account the contribution of all the tokens in
+
+191
+00:19:44.630 --> 00:19:47.639
+Massimo Piccardi: X to itself, but also x, one x. To the energy.
+
+192
+00:19:48.200 --> 00:19:54.999
+Massimo Piccardi: and is the same size of x 2, so that we can attach an identical layer on top
+
+193
+00:19:55.120 --> 00:20:07.439
+Massimo Piccardi: that will repeat the same processing, and perhaps over and over. So our goal is to obtain something of exactly the same size of x 2. But that has been co-encoded or coembedded or influenced.
+
+194
+00:20:07.770 --> 00:20:11.220
+Massimo Piccardi: stop by the other tokens index excel.
+
+195
+00:20:11.920 --> 00:20:15.989
+Massimo Piccardi: So how does this self-attention work?
+
+196
+00:20:20.100 --> 00:20:27.050
+Massimo Piccardi:  The self-attention requires each self attention. There requires
+
+197
+00:20:27.650 --> 00:20:34.670
+Massimo Piccardi: building, or having 3 mattresses that go under the name of the query matrix. the
+
+198
+00:20:35.740 --> 00:20:40.130
+Massimo Piccardi: the key matrix. and the value
+
+199
+00:20:40.450 --> 00:20:41.210
+metrics.
+
+200
+00:20:41.710 --> 00:20:46.570
+Massimo Piccardi: In the example that we have chosen of 768.
+
+201
+00:20:47.700 --> 00:20:50.580
+Massimo Piccardi: Each of these matrices may be
+
+202
+00:20:51.940 --> 00:20:53.179
+64
+
+203
+00:20:53.510 --> 00:20:54.210
+Massimo Piccardi: the
+
+204
+00:20:54.570 --> 00:20:58.610
+Massimo Piccardi: in width, and 7, 68 in height.
+
+205
+00:20:58.700 --> 00:21:02.199
+Massimo Piccardi: or vice versa, because we can always transpose them, flip them
+
+206
+00:21:02.990 --> 00:21:05.650
+Massimo Piccardi: same for a and same for B.
+
+207
+00:21:07.180 --> 00:21:09.780
+Massimo Piccardi: So our token x. 2
+
+208
+00:21:10.520 --> 00:21:13.640
+Massimo Piccardi: gets multiplied by matrix. Q.
+
+209
+00:21:14.970 --> 00:21:19.180
+Massimo Piccardi: How do we organize that? We could take a queue transposed.
+
+210
+00:21:19.220 --> 00:21:23.209
+Massimo Piccardi: for instance, which is 64 by 7, 6, 8,
+
+211
+00:21:24.120 --> 00:21:25.750
+Massimo Piccardi: it's
+
+212
+00:21:26.380 --> 00:21:27.220
+Massimo Piccardi: Peace
+
+213
+00:21:28.730 --> 00:21:32.530
+Massimo Piccardi: x, 2 is said many times 7, 68
+
+214
+00:21:32.840 --> 00:21:36.410
+Massimo Piccardi: times one. If you want is like column vector
+
+215
+00:21:37.090 --> 00:21:39.870
+Massimo Piccardi: 768 numbers elements.
+
+216
+00:21:39.980 --> 00:21:44.240
+Massimo Piccardi: we multiply the 2, and we obtain our 60, 40 result
+
+217
+00:21:44.740 --> 00:21:47.160
+Massimo Piccardi: as of the standard rules of the.
+
+218
+00:21:49.520 --> 00:21:52.110
+Massimo Piccardi: So this is the query version of x 2.
+
+219
+00:21:52.340 --> 00:21:57.510
+Massimo Piccardi: Then we do the same with the key matrix and the value matrix. And we obtain the key version
+
+220
+00:21:57.660 --> 00:21:59.330
+of x. 2, and the
+
+221
+00:21:59.560 --> 00:22:01.640
+Massimo Piccardi: value version of
+
+222
+00:22:02.310 --> 00:22:06.930
+Massimo Piccardi: extra. But of course we could call Q. 2 k, 2.
+
+223
+00:22:40.380 --> 00:22:45.910
+Massimo Piccardi: So I had append problem. So Q. 2, we set a, 2 and B 2
+
+224
+00:22:46.300 --> 00:22:55.270
+Massimo Piccardi: for briefness. So these are these products between these matrices and the Q, 2, a. 2 and v. 2 are all 64 d. In our assumption.
+
+225
+00:22:57.200 --> 00:22:58.330
+Massimo Piccardi: Now.
+
+226
+00:22:59.660 --> 00:23:01.439
+Massimo Piccardi: what do we do with them?
+
+227
+00:23:02.140 --> 00:23:05.940
+Massimo Piccardi: The first thing we do? We take the query. Q. 2.
+
+228
+00:23:06.670 --> 00:23:08.720
+Massimo Piccardi: And we compare
+
+229
+00:23:08.910 --> 00:23:13.620
+Massimo Piccardi: that key key. The query, Q. 2. With the keys.
+
+230
+00:23:13.770 --> 00:23:14.730
+Massimo Piccardi: the key.
+
+231
+00:23:15.580 --> 00:23:16.680
+Values
+
+232
+00:23:17.150 --> 00:23:22.519
+Massimo Piccardi: of all the tokens, including token 2 itself had.
+
+233
+00:23:22.550 --> 00:23:29.070
+Massimo Piccardi: Do we compare we compute the so-called product which is just the matrix product between
+
+234
+00:23:29.210 --> 00:23:30.630
+Massimo Piccardi: Q and K.
+
+235
+00:23:31.610 --> 00:23:35.910
+Massimo Piccardi: Let me debate a little bit. What's on the screen now?
+
+236
+00:23:38.180 --> 00:23:46.589
+Massimo Piccardi: So and look into x 2. We have form Dala, q, 2, which is a vector, of 64 d.
+
+237
+00:23:49.090 --> 00:23:50.970
+Massimo Piccardi: For all the tokens
+
+238
+00:23:51.150 --> 00:23:55.240
+Massimo Piccardi: including x to itself. We have a one k.
+
+239
+00:23:56.310 --> 00:23:57.110
+Massimo Piccardi: 3
+
+240
+00:23:58.120 --> 00:24:00.939
+Massimo Piccardi: and K, 4, all of the same size.
+
+241
+00:24:01.460 --> 00:24:02.810
+Massimo Piccardi: then these
+
+242
+00:24:03.030 --> 00:24:05.560
+Massimo Piccardi: get multiplied by Q, 2.
+
+243
+00:24:06.670 --> 00:24:07.950
+Massimo Piccardi: Transpose.
+
+244
+00:24:09.360 --> 00:24:10.150
+Massimo Piccardi: Okay.
+
+245
+00:24:11.630 --> 00:24:15.169
+Massimo Piccardi: this product is one times 64.
+
+246
+00:24:16.510 --> 00:24:19.079
+Massimo Piccardi: The vector, this is 64 times one.
+
+247
+00:24:19.490 --> 00:24:23.799
+Massimo Piccardi: The product ends up in a single scanner value
+
+248
+00:24:24.580 --> 00:24:27.140
+Massimo Piccardi: one by one, or simply a number.
+
+249
+00:24:27.740 --> 00:24:35.330
+Massimo Piccardi: You remember, the top product is the first element of the first vector multiplied by the first element of the second, vector
+
+250
+00:24:36.450 --> 00:24:45.929
+Massimo Piccardi: the second element of the first, vector the second of the second, the third third, all corresponding elements get multiplied and add it all up. That's the
+
+251
+00:24:46.120 --> 00:24:48.790
+plot it. So we compute the dot product.
+
+252
+00:24:49.120 --> 00:24:53.290
+Massimo Piccardi: The result of 2 vectors is maximum, if they are the same.
+
+253
+00:24:54.070 --> 00:24:55.849
+Massimo Piccardi: if they are portable
+
+254
+00:24:56.210 --> 00:25:07.310
+Massimo Piccardi: as points in in a space of 768 d. Or 64 d. Sorry. In this case they are orthogonal. They represent points that respect to the origin are orthogonal.
+
+255
+00:25:08.250 --> 00:25:13.389
+Massimo Piccardi: The product is 0. So this product can go from a maximum value to 0
+
+256
+00:25:13.980 --> 00:25:25.459
+Massimo Piccardi: can also be negative. obviously depending on the values of the elements. So it has a range of values where some values mean that the 2 vectors agree completely.
+
+257
+00:25:25.780 --> 00:25:28.450
+Massimo Piccardi: and other values mean that they disagree
+
+258
+00:25:28.780 --> 00:25:30.680
+Massimo Piccardi: oblique or partially
+
+259
+00:25:31.060 --> 00:25:34.070
+Massimo Piccardi: so. Fundamentally, this color becomes a weight
+
+260
+00:25:35.230 --> 00:25:43.060
+Massimo Piccardi: that measures the matching between the query of the token, we are interested in token. 2, and the keys of all the token
+
+261
+00:25:43.380 --> 00:25:48.210
+Massimo Piccardi: in this way. Query 2 is attending to all the tokens.
+
+262
+00:25:48.980 --> 00:25:53.430
+Massimo Piccardi: and computes a weight of the quality or intensity of the matching.
+
+263
+00:25:54.800 --> 00:26:02.359
+Massimo Piccardi: This weight is somehow normalized, because all these products across the entire token
+
+264
+00:26:02.850 --> 00:26:05.459
+Massimo Piccardi: you compute the soft max
+
+265
+00:26:05.920 --> 00:26:06.819
+Massimo Piccardi: of it.
+
+266
+00:26:07.080 --> 00:26:13.639
+Massimo Piccardi: so that this product, instead of being in a range minus plus, becomes 0 one like a probability.
+
+267
+00:26:14.080 --> 00:26:20.830
+Massimo Piccardi: And also you can normalize this by typically the square root of the 64
+
+268
+00:26:20.950 --> 00:26:24.810
+Massimo Piccardi: small tricks. That kind of manipulate the dot product
+
+269
+00:26:25.760 --> 00:26:30.580
+Massimo Piccardi: through the softmax battalions. Proper probability range into a
+
+270
+00:26:30.750 --> 00:26:38.099
+Massimo Piccardi: weight between 0 and one. A weight of one means perfect match, a weight of 0 means
+
+271
+00:26:38.560 --> 00:26:40.950
+Massimo Piccardi: worst possible match.
+
+272
+00:26:42.140 --> 00:26:46.479
+Massimo Piccardi: So in a way, we are comparing this query, back up with the key
+
+273
+00:26:46.540 --> 00:26:59.909
+Massimo Piccardi: of the token itself, and all the other tokens. If they match the value is one or near. If they don't match, the value is 0, and this token cannot match all the tokens
+
+274
+00:27:00.010 --> 00:27:04.590
+Massimo Piccardi: with one, because, as usual for probabilities, the softmax returns
+
+275
+00:27:05.910 --> 00:27:07.280
+Massimo Piccardi: set of weights.
+
+276
+00:27:07.480 --> 00:27:12.629
+Massimo Piccardi: of whose total sum is one, so it forces pretty much the attention
+
+277
+00:27:12.650 --> 00:27:14.279
+Massimo Piccardi: of the query to the key.
+
+278
+00:27:14.290 --> 00:27:19.760
+Massimo Piccardi: The best matching key will have the largest weight, and the others will have lower weight.
+
+279
+00:27:20.300 --> 00:27:24.080
+Massimo Piccardi: What do we do then, with these weights that we have just computed?
+
+280
+00:27:25.040 --> 00:27:31.319
+Massimo Piccardi: We said that scales between 0 and one. we multiplied them by the corresponding
+
+281
+00:27:32.910 --> 00:27:37.979
+Massimo Piccardi: Thank you. The failures. The third animal we had computed be wild people.
+
+282
+00:27:38.920 --> 00:27:41.199
+Massimo Piccardi: now multiplied by the
+
+283
+00:27:43.450 --> 00:27:47.309
+Massimo Piccardi: corresponding weight. So this is the weight
+
+284
+00:27:47.980 --> 00:27:50.420
+Massimo Piccardi: token 2 for token 2.
+
+285
+00:27:51.940 --> 00:27:58.450
+Massimo Piccardi: And this is the value 2. This weight will let that value flow through
+
+286
+00:27:58.480 --> 00:28:03.080
+Massimo Piccardi: with some weight. If the weight is 0 v. 2 is killed off.
+
+287
+00:28:03.130 --> 00:28:14.300
+Massimo Piccardi: If the weight is one b. 2 is let go through in its thin type. and anywhere in between. The same is for all the other 3 tokens 2 times k. One.
+
+288
+00:28:15.220 --> 00:28:20.029
+Massimo Piccardi: Compute the weight and multiply by v. One. That's it's like a tab.
+
+289
+00:28:20.240 --> 00:28:26.030
+Massimo Piccardi: The weight is like a tap that lets values, e, one e, 2, e, 3, and 4 go through
+
+290
+00:28:26.260 --> 00:28:27.060
+clock.
+
+291
+00:28:27.230 --> 00:28:40.110
+Massimo Piccardi: The second slot. Let these values flow through and then add all up. So we do these, and we add this up at position 2. For tokens, one token, 2, token, 3, and tokens.
+
+292
+00:28:40.640 --> 00:28:45.730
+Massimo Piccardi: So the values of v. One, v. 2, v. 3, v. 4 in. Slot 2
+
+293
+00:28:45.810 --> 00:28:50.509
+Massimo Piccardi: are weighed by the use of q. 2. The query of that token.
+
+294
+00:28:50.700 --> 00:28:51.859
+Massimo Piccardi: or that slot.
+
+295
+00:28:51.870 --> 00:28:56.299
+Massimo Piccardi: and then we let them through at the map, and we get what comes out.
+
+296
+00:28:58.310 --> 00:29:03.370
+Massimo Piccardi: So what comes out? What comes in into token 2 is x. 2.
+
+297
+00:29:03.570 --> 00:29:05.219
+Massimo Piccardi: What comes out
+
+298
+00:29:05.320 --> 00:29:07.309
+Massimo Piccardi: is the edit sum
+
+299
+00:29:07.570 --> 00:29:14.890
+Massimo Piccardi: through weight of the values of all the 2. And that's why each position.
+
+300
+00:29:15.180 --> 00:29:20.999
+Massimo Piccardi: the code in an encoder of a transformer is able to take into account all the other tokens
+
+301
+00:29:21.210 --> 00:29:22.430
+Massimo Piccardi: at the same time
+
+302
+00:29:23.870 --> 00:29:31.350
+Massimo Piccardi: most often, and not always, the value of the token itself. In this case v. 2 may be the one with the highest weight.
+
+303
+00:29:31.670 --> 00:29:38.210
+Massimo Piccardi: but depends on the processing. In some cases it may be any of the other tokens that take the largest way.
+
+304
+00:29:38.430 --> 00:29:57.470
+Massimo Piccardi: In some cases 2 tokens may get exactly the same way in this position in position. Slot 2. The saying that we described for slot 2 with query, q. 2. We repeat for slot, one for Slotu, and so for Slot 3 and for slothful. So we got the outputs from all the slots in every such slot.
+
+305
+00:29:57.500 --> 00:29:59.659
+Massimo Piccardi: with the corresponding query.
+
+306
+00:29:59.900 --> 00:30:06.289
+Massimo Piccardi: we assess the match with the keys of the other tokens, and we let the corresponding pedest
+
+307
+00:30:06.500 --> 00:30:07.870
+Massimo Piccardi: a weighted sum.
+
+308
+00:30:09.970 --> 00:30:11.680
+Massimo Piccardi: What we described here
+
+309
+00:30:12.020 --> 00:30:16.490
+Massimo Piccardi: is exactly what happens. It's exactly what the self-attention is.
+
+310
+00:30:17.880 --> 00:30:26.449
+Massimo Piccardi: It's a sort of database or associative memory or dictionary, because you can think of the query as the element you're looking for.
+
+311
+00:30:27.350 --> 00:30:31.210
+Massimo Piccardi: The keys are the keys in a database. If there is a match
+
+312
+00:30:31.220 --> 00:30:34.449
+Massimo Piccardi: the value will be recovered will be extract.
+
+313
+00:30:35.830 --> 00:30:39.069
+Massimo Piccardi: This case the match is not 0 or one
+
+314
+00:30:39.220 --> 00:30:40.879
+Massimo Piccardi: full or missing.
+
+315
+00:30:41.170 --> 00:30:46.560
+Massimo Piccardi: it's anywhere in between. So we let flow through all the elements in proportions.
+
+316
+00:30:48.420 --> 00:30:51.509
+Massimo Piccardi: This is done exactly things, but
+
+317
+00:30:51.610 --> 00:30:57.370
+Massimo Piccardi: to have more information. The transformer does this multiple times
+
+318
+00:30:57.610 --> 00:31:01.279
+Massimo Piccardi: what we have described now they call it a head
+
+319
+00:31:03.990 --> 00:31:14.099
+Massimo Piccardi: ahead is just exactly the mechanism we describe. Now. why not do it? 4 types. for instance, we could do these
+
+320
+00:31:14.840 --> 00:31:26.830
+Massimo Piccardi: 8 times or 4 times or 12 times in complete parallel. So what we describe. We do it not just once. But so what is the point of doing the same thing? Multiple times?
+
+321
+00:31:27.410 --> 00:31:35.609
+Massimo Piccardi: It's because the matrices QA. And B. But we, posited in the beginning are randomly initialized.
+
+322
+00:31:36.430 --> 00:31:41.899
+Massimo Piccardi: and then they are learned as optimal parameters through the standard back propagation mechanisms.
+
+323
+00:31:42.140 --> 00:31:54.299
+Massimo Piccardi: So if, instead of one copy of this mechanism. We had, for instance, say 12. Well, then, we have 12 chances to start from 12 different random initialization
+
+324
+00:31:54.590 --> 00:31:58.239
+Massimo Piccardi: to somehow progress during the learning stage
+
+325
+00:31:58.490 --> 00:32:08.990
+Massimo Piccardi: what values for the corresponding QK. And B. And in a way, there are different views on the same data, because we start from different languages and learning. It's not
+
+326
+00:32:09.140 --> 00:32:20.590
+Massimo Piccardi: convex will end with different values for QK. And V in the 12 different heads if we assume to have 12 heads. So let's say that in our assumption we assume to have
+
+327
+00:32:20.730 --> 00:32:27.420
+Massimo Piccardi: well, such as it simply means. What we describe now is done not once, but 12 times in parallel
+
+328
+00:32:27.790 --> 00:32:33.179
+Massimo Piccardi: with the parameters, the mattresses, Euclid starting from different values.
+
+329
+00:32:34.290 --> 00:32:37.470
+Massimo Piccardi: So what do we do with the output of the 12 heads?
+
+330
+00:32:37.530 --> 00:32:45.429
+Massimo Piccardi: We are now ready to reconstruct a vector of the same size as the initial size. Because we said that every head
+
+331
+00:32:46.740 --> 00:32:54.380
+Massimo Piccardi: produces the weighted sum of the values of its input which is a 64 d. Vector
+
+332
+00:32:54.880 --> 00:32:57.669
+Massimo Piccardi: if we have 12 such heads.
+
+333
+00:32:57.830 --> 00:33:11.380
+Massimo Piccardi: 64 is type 12 is 768 d. So we just co-cutinate the app 12 different heads to form again padding of exactly the same size as the input event.
+
+334
+00:33:12.140 --> 00:33:14.890
+Massimo Piccardi: In order to achieve exactly what we had to.
+
+335
+00:33:14.940 --> 00:33:25.720
+Massimo Piccardi: Once within the beginning, we want the output size to be the same as the input size that instead of having just one encoded layer, we can stack another and another and another.
+
+336
+00:33:27.690 --> 00:33:38.110
+Massimo Piccardi: I will stop here because there's many other small details about how transformers work. But the mechanism, self attention, which in food is called
+
+337
+00:33:38.410 --> 00:33:39.660
+Massimo Piccardi: multi-headed
+
+338
+00:33:41.400 --> 00:33:43.870
+Massimo Piccardi: self attention.
+
+339
+00:33:45.790 --> 00:33:51.590
+Massimo Piccardi: For the obvious reason we just said, the mechanism of self-attention is replicated
+
+340
+00:33:51.900 --> 00:33:58.700
+Massimo Piccardi: 8 times 12 times. It all depends on the specific size chosen for the embeddings and addresses.
+
+341
+00:33:58.900 --> 00:34:00.290
+Massimo Piccardi: but with examples
+
+342
+00:34:00.700 --> 00:34:13.919
+Massimo Piccardi: used, 760 d. Input every head produces an output which is 64 d. We have 12 heads, 64 times 12768. But they need to hold these outputs to one.
+
+343
+00:34:14.500 --> 00:34:20.439
+Massimo Piccardi: and then we can stick another layer. Let's forget about the normalization and feed forward network for now. But
+
+344
+00:34:20.960 --> 00:34:27.859
+Massimo Piccardi: in a sense, that's exactly what comes out. A hidden state, a hidden vector of exactly the same size as its ink.
+
+345
+00:34:28.110 --> 00:34:30.329
+Massimo Piccardi: so that multiple layers can be stacked.
+
+346
+00:34:33.360 --> 00:34:37.190
+Massimo Piccardi:  this is enough for the encoder.
+
+347
+00:34:40.190 --> 00:34:43.199
+Massimo Piccardi: Now we talk about the decoder.
+
+348
+00:34:47.060 --> 00:34:51.330
+Massimo Piccardi: The encoder is, as we say, the cat is
+
+349
+00:34:52.800 --> 00:34:53.480
+Massimo Piccardi: on.
+
+350
+00:34:56.090 --> 00:35:00.399
+Massimo Piccardi: How does the decoder produce the translation?
+
+351
+00:35:01.340 --> 00:35:07.819
+Massimo Piccardi: The decoder has exactly the same architecture as the encoder that fundamentally
+
+352
+00:35:07.830 --> 00:35:10.379
+Massimo Piccardi: exactly the same network.
+
+353
+00:35:11.630 --> 00:35:12.330
+Massimo Piccardi: But
+
+354
+00:35:12.550 --> 00:35:16.420
+Massimo Piccardi: the input to the decoder network
+
+355
+00:35:17.200 --> 00:35:19.830
+Massimo Piccardi: is given one token at a time.
+
+356
+00:35:20.390 --> 00:35:37.360
+Massimo Piccardi: So while people hear and say that that the the encoder is parallel, because what we described before has no first and last, all the positions are encoded through the position, encodings, and all the all the processing we had described can proceed in parallel for all the
+
+357
+00:35:38.390 --> 00:35:46.809
+Massimo Piccardi: but the decoder. No, the decoder works sequentially from a logical perspective, has to, because you cannot produce at once.
+
+358
+00:35:47.120 --> 00:35:49.480
+Massimo Piccardi: All the output tokens.
+
+359
+00:35:49.560 --> 00:35:56.670
+Massimo Piccardi: In reality there is a branch of studies of transformers called the known autoregressive Transformer Nat.
+
+360
+00:35:56.790 --> 00:36:02.459
+Massimo Piccardi: So here, that is, attempting to do exactly that, to produce the output in one go.
+
+361
+00:36:03.260 --> 00:36:10.669
+Massimo Piccardi: The ordinary decoder doesn't do. The auditor decoder looks at the input of the first token first in the first cycle
+
+362
+00:36:10.880 --> 00:36:16.339
+Massimo Piccardi: puts a special in which is a token called the beginning of Saint Tens.
+
+363
+00:36:17.780 --> 00:36:22.040
+Massimo Piccardi: What is a special code? A special token is a string
+
+364
+00:36:23.050 --> 00:36:27.019
+Massimo Piccardi: that can pretty much never occur in text.
+
+365
+00:36:27.410 --> 00:36:36.359
+Massimo Piccardi: It's like a word, another token that we simply, if we had our vocabulary, I'll throw here now the vocabulary we said, we have word cat
+
+366
+00:36:36.600 --> 00:36:47.360
+Massimo Piccardi: word is we can also have. Would BOS. Enclosed between 2 square brackets or 2
+
+367
+00:36:48.520 --> 00:36:53.540
+Massimo Piccardi: pipe signs whatever. So, some simply a string that we are.
+
+368
+00:36:54.100 --> 00:36:58.179
+Massimo Piccardi: It's impossible statistically, to encounter the text.
+
+369
+00:36:58.530 --> 00:37:01.840
+Massimo Piccardi: so it will never be used as an ordinary token
+
+370
+00:37:02.440 --> 00:37:05.660
+Massimo Piccardi: that has its own position in vocabulary
+
+371
+00:37:07.700 --> 00:37:09.609
+Massimo Piccardi: and its own embedding.
+
+372
+00:37:09.820 --> 00:37:18.460
+Massimo Piccardi: So it's just a word that is unlikely to occur in natural text that we reserve for special use in this case, obviously to begin our translation.
+
+373
+00:37:19.770 --> 00:37:26.680
+Massimo Piccardi: How is this embedding, treated in the decoder? Exactly like the tokens are treated
+
+374
+00:37:27.230 --> 00:37:33.829
+anchored. So it goes through the same mechanism, self attention, stack layers, and so forth. And at the end
+
+375
+00:37:34.790 --> 00:37:36.130
+Massimo Piccardi: we'll produce here
+
+376
+00:37:38.050 --> 00:37:47.229
+Massimo Piccardi: probability over the vocabulary. Typically what we do with that probability we choose the largest value.
+
+377
+00:37:47.920 --> 00:37:53.310
+Massimo Piccardi: and the word in the vocabulary which is attached to the largest baby.
+
+378
+00:37:54.250 --> 00:37:59.410
+Massimo Piccardi: This is called the arg. Max atmax means to take the word
+
+379
+00:37:59.820 --> 00:38:04.620
+Massimo Piccardi: vocabulary generates the largest probability in the first slot.
+
+380
+00:38:04.820 --> 00:38:07.570
+Massimo Piccardi: hopefully. That will be the word le.
+
+381
+00:38:08.760 --> 00:38:14.139
+Massimo Piccardi: because we hope that the decoder is able to translate correctly from English to French.
+
+382
+00:38:14.320 --> 00:38:17.420
+Massimo Piccardi: so we hope that the world, the largest probability.
+
+383
+00:38:18.080 --> 00:38:27.409
+Massimo Piccardi: not necessarily by a large margin, doesn't matter, because just arc Max, the word of the largest probability, but we hope that is the correct word
+
+384
+00:38:27.790 --> 00:38:33.529
+Massimo Piccardi: when the decoder translates incorrectly, simply because the probability assigned by the first log
+
+385
+00:38:33.590 --> 00:38:40.359
+Massimo Piccardi: vocabulary, but the vocabulary will not have the as the largest probability somewhere else.
+
+386
+00:38:41.900 --> 00:38:45.620
+Massimo Piccardi: Then this word lay. The first predicted word
+
+387
+00:38:45.790 --> 00:38:48.560
+Massimo Piccardi: is used as the second token in.
+
+388
+00:38:51.250 --> 00:38:58.369
+Massimo Piccardi: That's why parliamentary. The decoder has to proceed sequentially because it uses its own predictions
+
+389
+00:38:58.390 --> 00:39:06.790
+Massimo Piccardi: as the input for the next tokens prediction. So there has to, of course, proceed in some kind of sequential way.
+
+390
+00:39:08.400 --> 00:39:10.910
+Massimo Piccardi:  it's possible to
+
+391
+00:39:12.080 --> 00:39:24.729
+Massimo Piccardi: progress. Not one prediction on, but maybe 5 or 10 small number, and in the end choose the most likely of all this is called beam search.
+
+392
+00:39:24.960 --> 00:39:29.369
+Massimo Piccardi: whereas what we described before in the library is called greedy, decoding
+
+393
+00:39:31.540 --> 00:39:34.409
+Massimo Piccardi: in search progresses, maybe 5 or 10.
+
+394
+00:39:34.430 --> 00:39:37.639
+Massimo Piccardi: It's different attempts at translating
+
+395
+00:39:39.010 --> 00:39:43.619
+Massimo Piccardi: first predicted word becoming the second input. And then here.
+
+396
+00:39:44.480 --> 00:39:48.910
+Massimo Piccardi: hopefully. the prediction, the second slot will be correct. Shot.
+
+397
+00:39:49.020 --> 00:40:03.539
+Massimo Piccardi: then shot becomes the next input word until we finish until we get the last word in prediction. That last word in prediction is followed by a special token that hopefully will predicting the correct
+
+398
+00:40:04.100 --> 00:40:07.770
+Massimo Piccardi: point. The sequence which is the end of sentence.
+
+399
+00:40:08.190 --> 00:40:16.799
+Massimo Piccardi: End of sentence, will terminate logically the sentence in output and will tell the user. This is the output of the decoder.
+
+400
+00:40:18.440 --> 00:40:21.790
+Massimo Piccardi:  how do the 2 networks are connected?
+
+401
+00:40:22.290 --> 00:40:30.890
+Massimo Piccardi: The 2 networks are connected through a mechanism called crossattention. which is exactly like the self-attention.
+
+402
+00:40:31.650 --> 00:40:36.779
+Massimo Piccardi: In what way differs very simply this time with the queeries
+
+403
+00:40:37.280 --> 00:40:38.749
+Massimo Piccardi: of the tokens
+
+404
+00:40:38.980 --> 00:40:45.060
+Massimo Piccardi: in the decoder, the query component of the tokens in the decoder. We attend not only
+
+405
+00:40:45.420 --> 00:40:46.700
+Massimo Piccardi: to the token
+
+406
+00:40:46.850 --> 00:40:49.899
+Massimo Piccardi: that we have already translated in the decoder.
+
+407
+00:40:50.290 --> 00:40:56.740
+Massimo Piccardi: but also to all the tokens in the encoder. The values in the encoder
+
+408
+00:40:56.890 --> 00:41:01.749
+Massimo Piccardi: so discuss attention. Mechanism allows the decoder to be informed
+
+409
+00:41:02.110 --> 00:41:05.439
+Massimo Piccardi: when it encodes the hidden states of any token.
+
+410
+00:41:06.510 --> 00:41:08.939
+Massimo Piccardi: allows the hidden State to
+
+411
+00:41:09.180 --> 00:41:18.780
+Massimo Piccardi: allowed. Sorry the recorded slot to be informed by all the preceded previously translated tokens, and all the tokens encoded by the
+
+412
+00:41:20.120 --> 00:41:30.689
+Massimo Piccardi: so the 2 networks are fundamentally almost identical up to the point that many implementations don't like. Chat generally don't use the encoder at all
+
+413
+00:41:30.820 --> 00:41:36.119
+Massimo Piccardi: uses only the encoder also sorry, only the decoder also, for the.
+
+414
+00:41:37.360 --> 00:41:39.569
+Massimo Piccardi: we will talk about that in one. Sec.
+
+415
+00:41:40.170 --> 00:41:45.109
+Massimo Piccardi: So this is what happens in the decoder decoder decodes one to the time.
+
+416
+00:41:45.400 --> 00:41:46.679
+a vector. Of probability
+
+417
+00:41:46.990 --> 00:41:48.390
+Massimo Piccardi: about the request.
+
+418
+00:41:51.010 --> 00:41:51.910
+Massimo Piccardi: Thanks.
+
+419
+00:41:56.160 --> 00:42:02.049
+Massimo Piccardi: How do we obtain that probability? Vector this is interesting. So let's say that this is the
+
+420
+00:42:03.630 --> 00:42:04.670
+Massimo Piccardi: decoder.
+
+421
+00:42:06.130 --> 00:42:12.049
+Massimo Piccardi: the first slot of the decoder, the one corresponding to the beginning of sentence, special token.
+
+422
+00:42:13.860 --> 00:42:21.499
+Massimo Piccardi: and, as we said before, the Decoder is identical to the encoder, we will have a hidden state from on the final layer
+
+423
+00:42:21.660 --> 00:42:29.829
+Massimo Piccardi: as the output we had speculated before, there was 7, 68 d. Let's make the same assumption.
+
+424
+00:42:34.380 --> 00:42:42.580
+Massimo Piccardi: So this hidden state is 768 DI want to obtain probabilities over the vocabulary. How do I obtain that?
+
+425
+00:42:42.690 --> 00:42:45.150
+Massimo Piccardi: Well, all I need is a matrix
+
+426
+00:42:45.610 --> 00:42:48.650
+Massimo Piccardi: of size, 7, 68
+
+427
+00:42:48.730 --> 00:42:50.079
+Massimo Piccardi: on one side.
+
+428
+00:42:53.040 --> 00:42:57.919
+Massimo Piccardi: and size vocabulary on the other.
+
+429
+00:42:59.030 --> 00:43:01.940
+Massimo Piccardi: If the vocabulary is 30,000 words.
+
+430
+00:43:02.000 --> 00:43:16.070
+Massimo Piccardi: this matrix would have size 7, 68 times 30,000, 7, 68 times. For this out means that I multiply 7, 68,000 metrics. And the output is again a vector, of 30,000
+
+431
+00:43:16.850 --> 00:43:23.039
+Massimo Piccardi: Ombudsman. These numbers are the logits that I put inside the soft Max
+
+432
+00:43:23.110 --> 00:43:29.449
+Massimo Piccardi: and the softmax converts these numbers into zeros. To ones. Sum, one
+
+433
+00:43:29.460 --> 00:43:30.859
+Massimo Piccardi: probability values.
+
+434
+00:43:32.540 --> 00:43:44.430
+Massimo Piccardi: If I want to choose the Argmax. I really don't even need to bother to compute the probabilities. The logits are enough, because the maximum of the logins is the maximum of the probabilities.
+
+435
+00:43:45.100 --> 00:43:49.750
+Massimo Piccardi: So if I would just want to find the most probable word, for instance, what lay
+
+436
+00:43:50.310 --> 00:43:51.350
+Massimo Piccardi: vocabulary.
+
+437
+00:43:52.790 --> 00:43:54.990
+Massimo Piccardi: the maximum of the logic of the
+
+438
+00:43:55.190 --> 00:44:03.650
+Massimo Piccardi: logits of the maximum corresponding probabilities where I can obtain from the logic, and now pass them as arguments on a softmax is the same one.
+
+439
+00:44:03.780 --> 00:44:12.649
+Massimo Piccardi: So I. If I just want the Atmax, I can compute the Arc Max, of the knowledge. It's interesting that as variables inside the code.
+
+440
+00:44:12.790 --> 00:44:16.080
+these values are always called precise in lodgings
+
+441
+00:44:16.790 --> 00:44:17.900
+Massimo Piccardi: and props.
+
+442
+00:44:18.780 --> 00:44:32.189
+Massimo Piccardi: This is almost like a universal contention over the name of the corresponding value. because logits at these V values props at the corresponding probabilities which are just the softmax of the login.
+
+443
+00:44:33.090 --> 00:44:42.339
+Massimo Piccardi: And if I want to choose the word at this lot, I just take the largest and the world that causes the largest value which in this case hopefully is worth.
+
+444
+00:44:43.840 --> 00:44:58.920
+Massimo Piccardi: Okay. So we have this final matrix, which incidentally is exactly the same size as the embedding matrix, the vocabulary, 7, 68, the size of the embedding times the size of the vocabulary. It's like a vocabulary
+
+445
+00:44:59.000 --> 00:45:01.290
+Massimo Piccardi: matrix in rivers.
+
+446
+00:45:01.640 --> 00:45:08.180
+Massimo Piccardi: because this goes from 7, 68 to V, whereas when we do the input for the encoder.
+
+447
+00:45:08.570 --> 00:45:13.760
+Massimo Piccardi: take 3 elements in the vocabulary, we turn them into 7, 68 d.
+
+448
+00:45:13.830 --> 00:45:19.560
+Massimo Piccardi: Embeddings to become the here. We do the opposite because we want words in our.
+
+449
+00:45:21.890 --> 00:45:26.209
+Massimo Piccardi: So that's exactly how things were on the decoder slot.
+
+450
+00:45:28.440 --> 00:45:30.510
+Massimo Piccardi: 2 important variations
+
+451
+00:45:32.590 --> 00:45:34.320
+about this scheme.
+
+452
+00:45:36.140 --> 00:45:40.209
+Massimo Piccardi: So the first is the encoder. Only network
+
+453
+00:45:40.950 --> 00:45:44.450
+Massimo Piccardi: encoded all the transformed as, or simply encoded all the neck.
+
+454
+00:45:46.160 --> 00:45:55.379
+Massimo Piccardi: What usage can we have for our transformer. Then, instead of being included in the code that, like we have explained now. it's only an encoder.
+
+455
+00:45:59.460 --> 00:46:07.179
+Massimo Piccardi: It's a super useful network that is an encoder on the network is probably the most famous work course of it.
+
+456
+00:46:08.670 --> 00:46:15.050
+Massimo Piccardi: So forget about the decoder. This time we cut transforming half, and we use only the first half.
+
+457
+00:46:15.610 --> 00:46:17.579
+Massimo Piccardi: How's the encoder used
+
+458
+00:46:17.990 --> 00:46:22.669
+Massimo Piccardi: exactly like before? And from every slot the cat is.
+
+459
+00:46:22.940 --> 00:46:24.449
+Massimo Piccardi: we have the
+
+460
+00:46:24.560 --> 00:46:28.260
+Massimo Piccardi: final vector, say, X, one, prime
+
+461
+00:46:28.660 --> 00:46:39.160
+Massimo Piccardi: x. 2, prime ex and prime. These are the final states. Sorry, final layer, hidden states up 7, 68 d.
+
+462
+00:46:41.370 --> 00:46:48.879
+Massimo Piccardi: Well, there are cases where, for instance, minor pitask is not translation or summarization or generation of a sentence.
+
+463
+00:46:49.080 --> 00:46:51.859
+Massimo Piccardi: Perhaps I just want to attach a label.
+
+464
+00:46:53.440 --> 00:47:05.720
+Massimo Piccardi: Each of my words tasks like named entity, recognition. potentially relation, extraction. Many, many energy tasks fall into this.
+
+465
+00:47:07.570 --> 00:47:13.880
+Massimo Piccardi: So we don't need the decoder to solve these tasks, because my goal is to have an output here that says
+
+466
+00:47:14.120 --> 00:47:15.979
+Massimo Piccardi: this word is a noun
+
+467
+00:47:17.890 --> 00:47:22.729
+Massimo Piccardi: is a class label instead of a word. The output of this
+
+468
+00:47:23.080 --> 00:47:30.570
+Massimo Piccardi: architecture is not a sequence of words or a sentence is a sequence of class labels, one per token
+
+469
+00:47:32.120 --> 00:47:33.220
+Massimo Piccardi: in the
+
+470
+00:47:33.260 --> 00:47:43.380
+Massimo Piccardi: how large is the class set depends on my task. If I want, for instance, to label each word in the input as noun, verb, adverb
+
+471
+00:47:44.200 --> 00:47:47.020
+Massimo Piccardi: need as many classes as I want to distinguish.
+
+472
+00:47:47.140 --> 00:47:49.780
+Massimo Piccardi: So if I have, I don't know 10 classes.
+
+473
+00:47:50.060 --> 00:47:55.849
+Massimo Piccardi: Then what I have here is a final matrix that converts 7, 68 d. Of x
+
+474
+00:47:56.200 --> 00:47:59.440
+Massimo Piccardi: prime into 10 numbers this time.
+
+475
+00:47:59.520 --> 00:48:04.189
+Massimo Piccardi: because this time. I don't want to output words. I want to output labels
+
+476
+00:48:04.200 --> 00:48:12.960
+Massimo Piccardi: in a class set that is much smaller typically than a vocabulary. So my final matrix, the one that leads to the logits and the
+
+477
+00:48:12.970 --> 00:48:19.000
+Massimo Piccardi: probabilities is only 7, 68 times 10 divided passes.
+
+478
+00:48:19.390 --> 00:48:22.920
+Massimo Piccardi: This allows me to have a class label predicted
+
+479
+00:48:23.240 --> 00:48:29.879
+Massimo Piccardi: of the slots of encoder. I don't need to have the decoder at all. This is how Bear works
+
+480
+00:48:30.730 --> 00:48:33.020
+Massimo Piccardi: first main usage, opera.
+
+481
+00:48:34.320 --> 00:48:39.509
+Massimo Piccardi: Another possibility is to use this same encoder on the network for
+
+482
+00:48:40.760 --> 00:48:44.840
+Massimo Piccardi: classification of text sentiment analysis.
+
+483
+00:48:44.920 --> 00:48:50.540
+Massimo Piccardi: For instance, I enter my entire text, and then I use only one of the out
+
+484
+00:48:52.180 --> 00:48:58.180
+Massimo Piccardi: to create a probability vector over the class set of the sentiment.
+
+485
+00:48:58.410 --> 00:49:04.440
+Massimo Piccardi: Not all of the other need and labels. In this case I need one label only for the entire sentence.
+
+486
+00:49:04.550 --> 00:49:07.719
+Massimo Piccardi: This is a sentence classification, task.
+
+487
+00:49:07.740 --> 00:49:19.960
+Massimo Piccardi: or text classification task. The text is classified as a whole into one of a few classes. So what is happening here. The text classification. I could take, for instance, this.
+
+488
+00:49:19.970 --> 00:49:31.299
+Massimo Piccardi: if I have 2 classes of text, positive and negative, for instance, or 3 positive, negative and neutral. I will take these 768 numbers in output. From the final layer
+
+489
+00:49:31.390 --> 00:49:35.749
+Massimo Piccardi: I will pass them to a matrix that turns 70 60 to 3,
+
+490
+00:49:35.930 --> 00:49:49.149
+Massimo Piccardi: and the output. The 3 outputs are the probability values of the logics of the 3 classes, and then I choose the art. Max. given that this token x. One has been influenced by all the other token.
+
+491
+00:49:49.830 --> 00:49:52.579
+Massimo Piccardi: putting the encoding. and not once.
+
+492
+00:49:52.640 --> 00:49:57.619
+Massimo Piccardi: but multiple times, one in every day, and one in every head. So it's so
+
+493
+00:49:58.170 --> 00:50:02.350
+Massimo Piccardi: intertwine that, unable to classify the entire text
+
+494
+00:50:02.510 --> 00:50:10.280
+Massimo Piccardi: by taking the probabilities of only one of the tokens. But of course, reading, the training of ejected that were playing that.
+
+495
+00:50:10.500 --> 00:50:12.290
+Massimo Piccardi: But the output
+
+496
+00:50:12.370 --> 00:50:19.050
+Massimo Piccardi: of the network only one produces sufficient probability values to classify the whole text in
+
+497
+00:50:19.770 --> 00:50:20.730
+Massimo Piccardi: glasses of.
+
+498
+00:50:23.060 --> 00:50:25.050
+Massimo Piccardi: Now. this is
+
+499
+00:50:25.190 --> 00:50:32.929
+Massimo Piccardi: exactly what happens, but to make things a little bit better. What people do in birth is to add
+
+500
+00:50:34.390 --> 00:50:39.579
+Massimo Piccardi: special token at the beginning. Just do not introduce a bias
+
+501
+00:50:40.070 --> 00:50:42.590
+Massimo Piccardi: in favor of any of the actual.
+
+502
+00:50:43.160 --> 00:50:51.700
+Massimo Piccardi: So exactly what you see here. But the first token, input, instead of being the actual first token of the sentence
+
+503
+00:50:52.990 --> 00:50:56.709
+Massimo Piccardi: is another of those special tokens that I'm adding arbitrarily.
+
+504
+00:50:58.020 --> 00:51:00.780
+Massimo Piccardi: is called the CLS.
+
+505
+00:51:01.240 --> 00:51:04.200
+Massimo Piccardi: Then I have the that I have had, and that I
+
+506
+00:51:05.920 --> 00:51:16.440
+Massimo Piccardi: so this time there's no foundational difference from what we said before. The only difference is that this lot that produces the probabilities
+
+507
+00:51:16.610 --> 00:51:21.570
+Massimo Piccardi: that I'm using to classify the text into one of the given classes is not
+
+508
+00:51:21.600 --> 00:51:27.279
+Massimo Piccardi: any of the actual token is a special token reserved for this
+
+509
+00:51:27.400 --> 00:51:31.639
+Massimo Piccardi: task classification. That's why it's called Cls bus.
+
+510
+00:51:32.940 --> 00:51:48.729
+Massimo Piccardi: so that in a way, yes, these are the probabilities that we use. Yes, they're influenced by all the tokens in the sentence. But no token plays a special role, no token is elected to be the one that outputs the probability of the text creating some kind of imbalance or asymmetry
+
+511
+00:51:48.830 --> 00:51:50.410
+Massimo Piccardi: reference. For
+
+512
+00:51:51.340 --> 00:51:57.219
+Massimo Piccardi: so in this way, Sierras is the one to generate babies that I eventually use
+
+513
+00:51:57.300 --> 00:51:59.529
+Massimo Piccardi: fax and choose the password
+
+514
+00:52:08.520 --> 00:52:09.750
+Massimo Piccardi: delete this
+
+515
+00:52:11.690 --> 00:52:15.459
+Massimo Piccardi: buildings. And now we talk briefly about Gp.
+
+516
+00:52:16.740 --> 00:52:23.870
+Massimo Piccardi: which is the Champ. Yeah of the transformers, which are decoder. Only networks.
+
+517
+00:52:33.860 --> 00:52:48.399
+Massimo Piccardi: I think the idea of an encode around the network is quite into it. The idea of a decoder on the network could be more confusing. Why and how it works. The reality is that it's very, very similar to an encoder follow it.
+
+518
+00:52:49.640 --> 00:52:53.560
+Massimo Piccardi: So the idea was decoded around the network is to have a big decoder.
+
+519
+00:52:57.430 --> 00:53:03.539
+Massimo Piccardi: where also the input is provided as tokens of the
+
+520
+00:53:03.730 --> 00:53:05.789
+Massimo Piccardi: Dick order instead of the
+
+521
+00:53:06.590 --> 00:53:09.670
+Massimo Piccardi: so in our case, the hat
+
+522
+00:53:10.630 --> 00:53:12.390
+Massimo Piccardi: is on the mat.
+
+523
+00:53:13.930 --> 00:53:15.569
+Massimo Piccardi: All the cat is on
+
+524
+00:53:15.820 --> 00:53:21.729
+Massimo Piccardi: will be, not the tokens in input to the encoder, but the first tokens of the decoder.
+
+525
+00:53:21.830 --> 00:53:32.689
+Massimo Piccardi: So before this is contradictory, before we said that the recorder needs to output them sequentially one at a time, because the one predicted here becomes the input to the next, and so forth.
+
+526
+00:53:33.070 --> 00:53:47.989
+Massimo Piccardi: Well, yes and no. If we already know what we want from the first few slots, we can strap them to these values. So we can say that the is the input and cat is the output
+
+527
+00:53:48.450 --> 00:54:02.109
+Massimo Piccardi: in a supervised way. We don't let the system choose. We say there is. The input CAD is the output of the first token cat is the input, to the second token, and is, is the output of the second. Toe
+
+528
+00:54:02.730 --> 00:54:03.640
+Massimo Piccardi: is
+
+529
+00:54:03.780 --> 00:54:07.700
+Massimo Piccardi: is the input to the third token, and on is the app.
+
+530
+00:54:08.190 --> 00:54:13.000
+Massimo Piccardi: On is the output of this token, and then
+
+531
+00:54:13.430 --> 00:54:27.520
+Massimo Piccardi: what? And here we let the decoder continue. So we let this mechanism of Ag. Max building the probability picking the Max and using the Max as the input for the next token.
+
+532
+00:54:27.630 --> 00:54:30.390
+Massimo Piccardi: after the prompt is finished.
+
+533
+00:54:30.730 --> 00:54:35.389
+Massimo Piccardi: So the prompt and the input to the encoder are exactly the same thing.
+
+534
+00:54:35.820 --> 00:54:44.129
+with the difference that the prompt is used as the first few tokens of the decoded sentence rather than as actual inputs to the encoded network.
+
+535
+00:54:45.260 --> 00:54:51.409
+Massimo Piccardi: So at that point where the question mark is, I make my first prediction, which hopefully will be late.
+
+536
+00:54:51.460 --> 00:54:55.209
+Massimo Piccardi: and then this leg goes into and then shot.
+
+537
+00:54:56.300 --> 00:55:07.929
+Massimo Piccardi: so the tokens of the prompt are nothing else than forced tokens or false choices of the first few slots of the decoder. Once we finish the prompt.
+
+538
+00:55:08.150 --> 00:55:09.579
+Massimo Piccardi: then we expect
+
+539
+00:55:09.730 --> 00:55:15.009
+Massimo Piccardi: the decoder to continue to predict from that. That's the reason why these tokens are
+
+540
+00:55:15.080 --> 00:55:21.729
+Massimo Piccardi: known as prompt, because the prompt, the decoder to continue from when the prompt finishes.
+
+541
+00:55:22.530 --> 00:55:42.390
+Massimo Piccardi: So there is no encoder. There is no other input conveyed. But think about what happens here. I mean, all these hidden State calculation still takes place. All the hidden State calculation here takes place. All the hidden calculations place all the hidden calculation. And then here we finally got our vector of probabilities
+
+542
+00:55:42.680 --> 00:55:45.490
+when we need to choose the At-max hopefully
+
+543
+00:55:45.640 --> 00:55:46.540
+Massimo Piccardi: correct.
+
+544
+00:55:47.450 --> 00:55:53.989
+Massimo Piccardi: So now, these all these hidden states through the self attention, whenever I'm here at the next slot.
+
+545
+00:55:54.030 --> 00:55:55.920
+I will have the information
+
+546
+00:55:56.000 --> 00:55:58.840
+Massimo Piccardi: of the values
+
+547
+00:55:58.940 --> 00:56:08.310
+Massimo Piccardi: and hidden states computed by all the previous slots. So it's full self attention to all that has been said before
+
+548
+00:56:08.540 --> 00:56:11.090
+Massimo Piccardi: and since. There is no formal input.
+
+549
+00:56:11.330 --> 00:56:16.880
+Massimo Piccardi: that's all the decoder uses to make the prediction of the next word.
+
+550
+00:56:21.520 --> 00:56:23.659
+Massimo Piccardi: One last thing is
+
+551
+00:56:24.020 --> 00:56:36.740
+Massimo Piccardi: how any such networks get trained. be it a full transformer with the encoder in the code. or and encoded on the network like that. or
+
+552
+00:56:36.850 --> 00:56:40.720
+Massimo Piccardi: a decoder on the network like Gp.
+
+553
+00:56:42.360 --> 00:56:46.159
+Massimo Piccardi: we won't go into depth of the training
+
+554
+00:56:46.270 --> 00:56:55.119
+Massimo Piccardi: right now. I believe this session is long enough, but the concept of the training is relatively simple. Training is always supervised.
+
+555
+00:56:57.000 --> 00:57:01.290
+Massimo Piccardi: What does supervised mean? Let's see an example for clarity.
+
+556
+00:57:02.260 --> 00:57:07.739
+Massimo Piccardi: In the case of the translation that we used from the start. We have the encoder. Here.
+
+557
+00:57:07.980 --> 00:57:15.530
+Massimo Piccardi: We have the decoder here connected. As we said before, we have the tokens in the input for one more time.
+
+558
+00:57:17.550 --> 00:57:20.470
+Massimo Piccardi: and we have the desire
+
+559
+00:57:20.520 --> 00:57:26.009
+Massimo Piccardi: translation in out what we manually believe to be the correct translation.
+
+560
+00:57:26.170 --> 00:57:28.020
+Massimo Piccardi: So we force it us out.
+
+561
+00:57:28.140 --> 00:57:33.520
+Massimo Piccardi: We say, this network, once starting with the beginning of sentence.
+
+562
+00:57:33.740 --> 00:57:38.330
+Massimo Piccardi: Then hence to predict. late in the first lot
+
+563
+00:57:38.750 --> 00:57:42.819
+Massimo Piccardi: in the second slot with laying input has predict.
+
+564
+00:57:43.600 --> 00:57:49.010
+Massimo Piccardi: Sorry shaq with the shot in input the next lot has to produce
+
+565
+00:57:50.130 --> 00:58:01.699
+Massimo Piccardi: and so forth. What does hast to predict me? We know that in output here we have a probability vector when we decide when we make inference, we choose
+
+566
+00:58:01.730 --> 00:58:08.260
+Massimo Piccardi: the probability, the largest probability, and the word that has it. So the word with the highest probability.
+
+567
+00:58:09.540 --> 00:58:20.680
+Massimo Piccardi: At training time, we do the opposite. The parameters are still floating, the paradise are still adjusting. So what we say is this, we put as the training objective.
+
+568
+00:58:20.740 --> 00:58:23.719
+Massimo Piccardi: alias loss, function, training.
+
+569
+00:58:24.060 --> 00:58:25.200
+Massimo Piccardi: objective.
+
+570
+00:58:31.260 --> 00:58:34.660
+Massimo Piccardi: We write it a little bit more clearly.
+
+571
+00:58:38.300 --> 00:58:41.050
+Massimo Piccardi: The training objective, which is that again.
+
+572
+00:58:41.390 --> 00:58:43.189
+one name training.
+
+573
+00:58:44.250 --> 00:58:44.970
+active
+
+574
+00:58:48.440 --> 00:58:52.410
+Massimo Piccardi: also known as loss function in the code
+
+575
+00:58:57.890 --> 00:59:00.860
+Massimo Piccardi: is the target of the training, or what
+
+576
+00:59:00.990 --> 00:59:16.370
+Massimo Piccardi: motivates the computation of the gradients that data the parameters through back propagation and everything which is done automatically. But we still have to say, what do we say? We ask the model to adjust its parameters so that word lay.
+
+577
+00:59:16.970 --> 00:59:20.909
+Massimo Piccardi: Add the first lot would have the highest possible probability.
+
+578
+00:59:21.860 --> 00:59:28.219
+Massimo Piccardi: Word sha, at the second slot with laying input would have the maximum probability.
+
+579
+00:59:28.470 --> 00:59:39.279
+Massimo Piccardi: Word S in output will have the maximum probability. We shine input late before the Shah, his outputs and everything else that proceeds.
+
+580
+00:59:39.350 --> 00:59:48.130
+Massimo Piccardi: So with all the previous words and all the inputs we want that particular wording. So the goal is to massage
+
+581
+00:59:48.370 --> 00:59:51.970
+Massimo Piccardi: the probability that the model is able to output
+
+582
+00:59:52.400 --> 00:59:59.370
+Massimo Piccardi: through changes in its internal parameters, so that the word which add the correct translation. Well.
+
+583
+00:59:59.420 --> 01:00:07.150
+Massimo Piccardi: what we manually notate is the correct translation or reference translation are each assigned maximal
+
+584
+01:00:07.490 --> 01:00:17.549
+Massimo Piccardi: possible probability. This objective is universally known as the negative log likelihood or cross entropy. These 2 names are completely interchangeable.
+
+585
+01:00:19.340 --> 01:00:28.809
+Massimo Piccardi: so the goal is for the model to assign the largest possible probability to the tokens that are regarded as the correct target of that translation.
+
+586
+01:00:30.680 --> 01:00:35.789
+Massimo Piccardi: So typically, you will see something like this in the papers.
+
+587
+01:00:37.020 --> 01:00:38.480
+Massimo Piccardi: The probability
+
+588
+01:00:38.500 --> 01:00:41.840
+Massimo Piccardi: of token. Say T
+
+589
+01:00:42.770 --> 01:00:45.249
+Massimo Piccardi: in the teeth slot of the decoder
+
+590
+01:00:45.810 --> 01:00:47.230
+Massimo Piccardi: be shot.
+
+591
+01:00:47.600 --> 01:00:54.459
+Massimo Piccardi: for instance. given all the previously translated tokens, one d. Minus one.
+
+592
+01:00:55.690 --> 01:00:58.469
+Massimo Piccardi: and given all the inputs x, 1, 2,
+
+593
+01:00:59.500 --> 01:01:13.240
+Massimo Piccardi: not necessarily. T, but let's say, T, so these are the probabilities they want to maximize where a YT implicitly as a symbol means shut and y one to T minus one in this case means let
+
+594
+01:01:13.390 --> 01:01:18.580
+Massimo Piccardi: and x one to T means the cat is on the actually. So given all those
+
+595
+01:01:19.150 --> 01:01:29.759
+Massimo Piccardi: inputs assign wood. Why t maximum possible probability. Typically, this is done in logarithmic scale. That's why log likelihood.
+
+596
+01:01:30.310 --> 01:01:36.140
+Massimo Piccardi: We sum it for all the tokens in the output, like the entire sequence
+
+597
+01:01:36.250 --> 01:01:40.999
+Massimo Piccardi: of the output. Not just word, one or 2, but all of them Leisha,
+
+598
+01:01:41.290 --> 01:01:48.329
+Massimo Piccardi: And we change with the sign minus in front, because the loss function is typically decreased
+
+599
+01:01:48.420 --> 01:01:51.119
+Massimo Piccardi: is a convention by the optimizer.
+
+600
+01:01:51.470 --> 01:02:04.259
+Massimo Piccardi: So since we want instead to increase the log probability, we change the sign. So the decrease of the negative log likelihood is equivalent to an increase of the normal positive log likelihood
+
+601
+01:02:05.970 --> 01:02:15.889
+Massimo Piccardi: for the classification task the same. But we put the classes as the target for the text classification task the same. But we put the classes as the tile.
+
+602
+01:02:18.770 --> 01:02:20.819
+Massimo Piccardi: We'll keep it to this. Thank you.
+
