@@ -1,41 +1,37 @@
 # Transformers_in_a_Nutshell
-This repository is a simplified presentation of transformers presented  by Prof Massimo Piccardi
 
+This repository offers a streamlined overview of transformers as introduced by Prof. Massimo Piccardi. A recorded video of the presentation is available:
 
-# Table of Content
+[Transformers full presentation](./video/transformers_all.mp4)
 
-1. **Transformer Structure**
-   - Encoder and Decoder Components
-   - Tokenization Process
+   1. **Overview of Transformer Architecture** (./video/1-Encoder_structure.mp4):
+      - Details on Encoders and Decoders
+      - Introduction to Tokens
+      - Basics of Embedding
 
-2. **Token Processing**
-   - Linking Tokens to Integer Indices
-   - Role of Encoder and Decoder
+   2. **Understanding the Encoder Mechanism** (./video/2-Encoder_mecanism.mp4):
+      - Process of Tokenization
+      - Insights into the Embedding Process
+      - Exploring Self-Attention
 
-3. **Embeddings**
-   - Numerical Representation of Tokens
-   - Significance of Embeddings in Processing
+   3. **Decoder Mechanism Explained** (./video/3-Decoder_mecanism.mp4):
+      - Focusing on Cross-Attention
 
-4. **Mechanisms within Transformer**
-   - Self-Attention in Encoder
-   - Cross-Attention in Decoder
+   4. **Focusing on Encoder-Only Models** (./video/4-Encoder_only.mp4):
+      - Deep Dive into BERT (Encoder-Only Model)
 
-5. **Application in Different Tasks**
-   - Translation
-   - Text Classification and Named Entity Recognition
+   5. **Decoder-Only Models Unveiled** (./video/5-Decoder_only.mp4):
+      - GPT Explored (Decoder-Only Model)
 
-6. **Variations of Transformer Models**
-   - BERT (Encoder only)
-   - GPT (Decoder only) 
+   6. **Training Transformers** (./video/6-Training_Transformers.mp4)
 
 
 
-# Transformer Structure
- 
+# Transformer Structure 
 A transformer network is composed of two distinct yet interconnected parts: an encoder and a decoder. 
-![encoder-decoder](./encoder_decoder.png)
+<img src="./img/encoder_decoder.png" alt="encoder_decoder" width="40%" height="40%">
 
-## Encoder
+## 1. Encoder
 
 The process begins with the encoder receiving text, such as "the cat is on." This text is then divided into smaller components known as tokens, a procedure referred to as tokenization. Tokenization operates based on a specific algorithm tailored to the model or language.
 
@@ -44,7 +40,7 @@ The process begins with the encoder receiving text, such as "the cat is on." Thi
 Consider the phrase "The cat is on." In tokenization, each word becomes a separate token to be processed by the encoder. Initially, these tokens are simply strings of text. If the transformer is employed in a task like translating from English to French, the decoder would then produce a translation, for example, turning "the cat is on" into "le chat est sur."
 
 Diving deeper into the encoding process, we see that the tokens correspond to a transformer's vocabulary. This vocabulary, integral to the transformer, works in conjunction with a tokenizer. It's essentially a comprehensive list that matches words to specific indices, much like pairing words to integer values.
-<img src="./img/embedding.png" alt="embedding" size="40%">
+<img src="./img/embedding.png" alt="embedding" width="40%" height="40%">
 
 For instance, in a typical setup, a vocabulary might range from 30,000 to as many as 250,000 different tokens. Each word, once tokenized, is linked to an integer index. The original string nature of the token is discarded at this stage, and only the integer index is relevant for further processing.
 
@@ -58,7 +54,7 @@ So, when the word "cat" appears in the input, it's first converted into an integ
 
 ### Embedding 
 
-<img src="./img/embedding_2.png" alt="embedding_2" size="40%">
+<img src="./img/embedding_2.png" alt="embedding_2" width="40%" height="40%">
 
 This initial transformation is a crucial step in the encoder's processing. What we refer to as token embeddings are the primary inputs into this system. These token embeddings are essentially numerical representations of the tokens and do not rely on their position within the sentence. For example, the embedding for the word "cat" remains constant regardless of its placement in the sentence.
 
@@ -74,13 +70,13 @@ It's worth noting that an alternative to segment embeddings for differentiating 
 
 What does the encoder do these embeddings? 
 
-### Mechanisms within Transformer
+### 2. Mechanisms within Transformer
 
 The encoder's function within the network involves a multi-layered structure, rather than just a single layer. At the outset, there's an initial encoding layer that receives input, which is followed by subsequent layers, each building upon the previous one. In a smaller transformer model, there might be around six layers, while larger models can have up to twelve or more, and this number can be adjusted as needed.
 
 Each layer in the encoder functions similarly. The first layer takes in the embeddings (the numerical representations of tokens) and processes them to produce what are known as hidden states. These hidden states are vectors of the same dimension as the embeddings, often 768 elements.
 
-<img src="./img/mecanism.png" alt="mecanism" size="30%">
+<img src="./img/mecanism.png" alt="mecanism" width="30%" height="30%">
 
 The hidden states generated by one layer then serve as the input for the next layer. This process continues sequentially through each layer of the encoder. For instance, if we have four tokens represented by embeddings $x1$, $x2$, $x3$, and $x4$, these are transformed into corresponding hidden states at each layer. As the information passes through each layer, the embeddings evolve into hidden states that are processed by subsequent layers.
 
@@ -89,7 +85,7 @@ This repetitive processing across multiple layers culminates in the final hidden
 
 **How each layer works?**
 
-<img src="./img/layers.png" alt="layers" size="40%">
+<img src="./img/layers.png" alt="layers" width="40%" height="40%">
 
 Each layer within the transformer is made up of several smaller networks. The most crucial among these is the self-attention network. Self-attention is a key component often highlighted in research papers and is essential for understanding the transformer's functionality. In addition to self-attention, there are other components like a normalization layer and a feed-forward network.
 
@@ -100,23 +96,23 @@ While all these components are important, self-attention stands out as the most 
 #### Self-attention
 
 To grasp the concept of self-attention, a useful comparison can be drawn with associative memories.
-<img src="./img/neurones.png" alt="neurones" size="20%">
+<img src="./img/neurones.png" alt="neurones" width="20%" height="20%">
 
  Imagine we have four tokens: $x1$, $x2$, $x3$, and $x4$. Each of these tokens, from their initial form to their indexed state and subsequent embeddings, goes through a uniform process in the network.
 
 Let's consider $x2$ as an example. The goal is to process $x2$ in such a way that the output, which we can label as $x2$ prime, differs from the original $x2$. This output is specifically aligned with the second token's slot. The unique aspect of this process is that $x2$' is influenced not only by $x2$ but also by the contributions of all the other tokens – $x1$, $x3$, and $x4$.
 
 The beauty of this system lies in its consistency; the size of $x2'$ remains the same as $x2$. This uniformity allows for the addition of subsequent identical layers atop one another, each repeating the same process. Ultimately, the aim is to produce an output for each token that, while maintaining its original size, is enriched or influenced by the information from all other tokens in the network.
-<img src="./img/self_attention.png" alt="self attention" size="40%">
+<img src="./img/self_attention.png" alt="self attention" width="40%" height="40%">
 
 **How does this self-attention works?**
 
 Self-attention within each layer of a transformer involves three critical components: the query matrix $Q$, the key matrix $K$, and the value matrix $V$. These matrices are essential in processing the tokens, for example, token $x2$.
-<img src="./img/matrices.png" alt="matrices" size="40%">
+<img src="./img/matrices.png" alt="matrices" width="40%" height="40%">
 
  The matrices, which could be 64 units wide and 768 units tall, interact with the token in a specific way.
 
-<img src="./img/heads.png" alt="heads" size="40%">
+<img src="./img/heads.png" alt="heads" width="40%" height="40%">
 When token $x2$ interacts with the query matrix $Q$, it is transformed into a new representation, let's call it $Q2$. This process is replicated with the key matrix $K$ and the value matrix $V$, resulting in key $K2$ and value $V2$ representations for the same token.
 
 The next step involves comparing $Q2$ with the key values of all other tokens, including $x2$ itself. This comparison is done through a dot product, which essentially measures the similarity between $Q2$ and each key. The result of this comparison is a set of values, which can range from high (indicating a strong match) to low or even negative (indicating a weak or no match).
@@ -167,9 +163,9 @@ In the given example, with an input of 768 dimensions, each head produces a 64-d
 
 For now, we'll set aside the details of the normalization and feed-forward networks. The key takeaway is the generation of a hidden state or vector that precisely matches the size of the input, enabling the seamless addition of multiple layers in the transformer.
 
-## Decoder
+## 3. Decoder
 
-<img src="./img/decoder.png" alt="decoder">
+<img src="./img/decoder.png" alt="decoder" width="40%" height="40%">
 
 The encoder functions on the premise, for example, "the cat is on." The decoder's task is to translate this. Structurally, the decoder mirrors the encoder in architecture, maintaining the same network design. However, its operational approach differs significantly.
 
@@ -194,7 +190,7 @@ The connection between the two networks in a transformer, namely the encoder and
 - This mechanism enriches the hidden states in the decoder with information from both previously translated tokens and all encoder tokens.
 
 
-<img src="./img/decoder_2.png" alt="decoder 2">
+<img src="./img/decoder_2.png" alt="decoder 2" width="40%" height="40%">
 
 The two components of the transformer architecture, the encoder and decoder, are interconnected by a mechanism known as cross-attention, which shares similarities with self-attention. The key distinction here is that within the decoder, the query elements of the tokens not only focus on what has been previously decoded but also consider all the tokens processed by the encoder. This cross-attention mechanism ensures that each token's hidden state in the decoder is informed by both the already translated tokens and the entire sequence of tokens from the encoder.
 
@@ -206,11 +202,11 @@ This final matrix in the decoder, interestingly, is similar in structure to the 
 
 The decoder’s task is intricate, involving the transformation of hidden states into probabilistic predictions of words, influenced by both the previously translated tokens and the original input processed by the encoder. This interaction between the encoder and decoder, facilitated by the cross-attention mechanism, is a defining feature of the transformer model, enabling it to effectively handle complex language processing tasks.
 
-### Encoder-Only
+# 4. Encoder-Only
 
 Transformers can be implemented with just an encoder network, excluding the decoder. This approach, focused solely on the encoder, is particularly effective and widely recognized.
 
-<img src="./img/encoder_only.png" alt="encoder only">
+<img src="./img/encoder_only.png" alt="encoder only" width="40%" height="40%">
 
 
 Regarding the encoder-only network, it's essentially half of a typical transformer model, focusing solely on the encoding aspect. This encoder-only setup, renowned for its effectiveness, is the backbone of many significant applications. Unlike configurations that involve both an encoder and a decoder, this approach hinges exclusively on the encoder.
@@ -224,21 +220,21 @@ Moreover, this encoder-only framework is also applied in text classification tas
 To further refine the process and avoid biases towards any specific token, BERT and similar models introduce a special token at the beginning of the input sequence. This token, often referred to as the CLS token, is specifically used for classification tasks, ensuring that the probabilities it generates are influenced equally by all tokens in the sentence.
 
 
-### Decoder-Only (eg.gpt)
+# 5. Decoder-Only
 
-<img src="./img/decoder_only.png" alt="decoder only">
+<img src="./img/decoder_only.png" alt="decoder only" width="40%" height="40%">
 
 
-GPT stands as a key transformer model, characterized by its exclusive reliance on decoders. Unlike typical transformers that include encoders, GPT's architecture is centered around an extensive decoder section. Inputs, such as "The cat is on the mat," are fed directly into the decoder as initial tokens, bypassing the encoder.
+A famous example of a decoder only transformer is GPT. GPT  stands as a key transformer model, characterized by its exclusive reliance on decoders. Unlike typical transformers that include encoders, GPT's architecture is centered around an extensive decoder section. Inputs, such as "The cat is on the mat," are fed directly into the decoder as initial tokens, bypassing the encoder.
 
 In GPT's framework, output generation unfolds sequentially, token by token. This method might appear contrary to earlier explanations regarding sequential output generation, which is contingent on previously generated outputs. However, GPT can predetermine certain inputs and outputs via a supervised method, enabling more controlled token generation.
 
 The model utilizes prompts as initial token sequences, guiding the decoder to generate subsequent sequences. Post prompt completion, the decoder independently predicts the remaining sequence, basing each next token prediction on existing probability distributions.
 
-Training GPT involves a supervised approach. In translation tasks, for instance, the model is trained to accurately predict the next token in a sequence, taking into account both the previously translated tokens and the initial input. The primary goal during training is to enhance the probability of correctly translating each sequential step, often employing methods like cross-entropy or negative log likelihood.
+# 6. Training a tramsformer 
+
+Training involves a supervised approach. In translation tasks, for instance, the model is trained to accurately predict the next token in a sequence, taking into account both the previously translated tokens and the initial input. The primary goal during training is to enhance the probability of correctly translating each sequential step, often employing methods like cross-entropy or negative log likelihood.
 
 During the decoding phase, GPT generates a probability vector at each step. From this vector, the model selects the token with the highest probability, which then informs the prediction for the next token.
 
 In mathematical terms, the training objective in GPT, particularly for translation tasks, is often represented as maximizing the probability of the correct token $ y_t $ at each step $ t $ in the decoder, given all previously translated tokens $y_{1:t-1} $ and the entire input sequence $$ x_{1:t} $$. This is expressed as maximizing $$ P(y_t | y_{1:t-1}, x_{1:t}) $$. In practice, this maximization is done using the log likelihood, which is summed over the entire output sequence. The negative of this log likelihood, known as the negative log likelihood or cross entropy, is minimized during training.
-
-GPT's decoder-centric design paves the way for a broad spectrum of applications, particularly in sequential text generation, underpinned by an effective, supervised training methodology.
