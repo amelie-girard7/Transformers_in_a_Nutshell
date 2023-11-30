@@ -138,15 +138,15 @@ What happens with the outputs from the 12 heads in the transformer's self-attent
 
 The goal is to assemble a vector that matches the original input size. Each of the 12 heads produces a weighted sum of its inputs, forming a 64-dimensional vector. Since there are 12 such heads, the dimensionality calculation can be expressed as:
 
-$$ \text{Dimension per head} \times \text{Number of heads} = 64 \times 12 = 768 $$
+$$\text{Dimension per head} \times \text{Number of heads} = 64 \times 12 = 768$$
 
 Therefore, the outputs from the 12 different heads are concatenated to create a composite vector that mirrors the input's dimensions. This concatenation can be represented as:
 
-$$ \text{Output} = \text{Concatenate}(\text{Head}_1, \text{Head}_2, \ldots, \text{Head}_{12}) $$
+$$\text{Output} = \text{Concatenate}(\text{Head}_1, \text{Head}_2, \ldots, \text{Head}_{12})$$
 
 This process ensures that the output size is consistent with the input size:
 
-$$ \text{Size}(\text{Output}) = \text{Size}(\text{Input}) $$
+$$\text{Size}(\text{Output}) = \text{Size}(\text{Input})$$
 
 By maintaining this dimensionality, it becomes feasible to layer additional encoding layers on top of one another.
 
@@ -183,7 +183,7 @@ A special token, often an unusual string not found in regular texts, marks the b
 
 At each step, the decoder generates a probability distribution over the vocabulary. The highest probability word is typically selected for the translation – a process known as argmax. For instance, in translating from English to French, the decoder might start by predicting the French word "le."
 
-$$ P(\text{word}) = \text{argmax}_{\text{word}} \, P(\text{word} | \text{context}) $$
+$$P(\text{word}) = \text{argmax}_{\text{word}} \, P(\text{word} | \text{context})$$
 
 The decoder relies on its own predictions for subsequent tokens, necessitating a sequential approach. This process can be refined using techniques like beam search, which explores multiple translation options simultaneously, as opposed to the more linear, greedy decoding.
 
@@ -243,4 +243,4 @@ Training involves a supervised approach. In translation tasks, for instance, the
 
 During the decoding phase, GPT generates a probability vector at each step. From this vector, the model selects the token with the highest probability, which then informs the prediction for the next token.
 
-In mathematical terms, the training objective in GPT, particularly for translation tasks, is often represented as maximizing the probability of the correct token $ y_t $ at each step $ t $ in the decoder, given all previously translated tokens $y_{1:t-1} $ and the entire input sequence $$ x_{1:t} $$. This is expressed as maximizing $$ P(y_t | y_{1:t-1}, x_{1:t}) $$. In practice, this maximization is done using the log likelihood, which is summed over the entire output sequence. The negative of this log likelihood, known as the negative log likelihood or cross entropy, is minimized during training.
+In mathematical terms, the training objective in GPT, particularly for translation tasks, is often represented as maximizing the probability of the correct token $y_t$ at each step $t$ in the decoder, given all previously translated tokens $$y_{1:t-1}$$ and the entire input sequence $$x_{1:t}$$. This is expressed as maximizing $$P(y_t | y_{1:t-1}, x_{1:t})$$. In practice, this maximization is done using the log likelihood, which is summed over the entire output sequence. The negative of this log likelihood, known as the negative log likelihood or cross entropy, is minimized during training.
