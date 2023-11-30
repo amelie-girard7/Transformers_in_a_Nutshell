@@ -4,26 +4,32 @@ This repository offers a streamlined overview of transformers as introduced by P
 
 [Transformers full presentation](./video/transformers_all.mp4)
 
-   1. **Overview of Transformer Architecture** [Encoder structure](./video/1-Encoder_structure.mp4):
+   1. **Overview of Transformer Architecture**
+      [Recording](./video/1-Encoder_structure.mp4):
       - Details on Encoders and Decoders
       - Introduction to Tokens
       - Basics of Embedding
 
-   2. **Understanding the Encoder Mechanism** [Encoder mecanism](./video/2-Encoder_mecanism.mp4):
+   2. **Understanding the Encoder Mechanism**
+      [Recording](./video/2-Encoder_mecanism.mp4):
       - Process of Tokenization
       - Insights into the Embedding Process
       - Exploring Self-Attention
 
-   3. **Decoder Mechanism Explained** [Decoder mecanism](./video/3-Decoder_mecanism.mp4):
+   3. **Decoder Mechanism Explained**
+      [Recording](./video/3-Decoder_mecanism.mp4):
       - Focusing on Cross-Attention
 
-   4. **Focusing on Encoder-Only Models** [Encoder only](./video/4-Encoder_only.mp4):
+   4. **Focusing on Encoder-Only Models**
+      [Recording](./video/4-Encoder_only.mp4):
       - Deep Dive into BERT (Encoder-Only Model)
 
-   5. **Decoder-Only Models Unveiled** [Decoder only](./video/5-Decoder_only.mp4):
+   5. **Decoder-Only Models Unveiled**
+      [Recording](./video/5-Decoder_only.mp4):
       - GPT Explored (Decoder-Only Model)
 
-   6. **Training Transformers** [Training Transformers](./video/6-Training_Transformers.mp4)
+   6. **Training Transformers**
+      [Recording](./video/6-Training_Transformers.mp4)
 
 
 
